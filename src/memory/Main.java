@@ -2,6 +2,9 @@ package memory;
 
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -26,10 +29,13 @@ public class Main extends Application {
     private static final int NUMBER_PER_ROW = 8;
     private static Tile selected = null;
     private static int clickCount = 2;
+    private static List<String> players = new ArrayList<>();
+    private static int nbPlayers = 1;
+    private static boolean isNbMaxPlayersReached = false;
 
     private Parent createContent() {
         Pane root = new Pane();
-        root.setPrefSize(600, 600);
+        root.setPrefSize(1000, 1000);
         char c = 'A';
         List<Tile> tiles = new ArrayList<>();
         for (int i = 0; i < NUMBER_OF_PAIRS; i++) {
@@ -49,26 +55,51 @@ public class Main extends Application {
         return root;
     }
 
-    private Parent createUserFields() {
+    private Parent createUserFields(Stage primaryStage) {
         StackPane root = new StackPane();
-        root.setPrefSize(600, 600);
+        root.setPrefSize(1000, 1000);
+
+        VBox fieldsBox = new VBox();
+        fieldsBox.setPadding(new Insets(20, 50, 20, 50));
+        Label label = new Label("Joueur 1 :");
+        TextField textField = new TextField ();
+        fieldsBox.getChildren().addAll(label, textField);
+        fieldsBox.setSpacing(10);
+        fieldsBox.setAlignment(Pos.CENTER);
 
         HBox buttonBox = new HBox();
         Button addPlayerBtn = new Button("+");
+        addPlayerBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (nbPlayers <= 7) {
+                    Label labelPlayers = new Label("Joueur " + (nbPlayers + 1) + " :");
+                    TextField textField = new TextField ();
+                    fieldsBox.getChildren().addAll(labelPlayers, textField);
+                    nbPlayers++;
+                } else if (!isNbMaxPlayersReached) {
+                    Label nbJoueursMaxReached = new Label("Nombre de joueur maximum atteint");
+                    nbJoueursMaxReached.setFont(Font.font(25));
+                    nbJoueursMaxReached.setTextFill(Color.RED);
+                    fieldsBox.getChildren().add(nbJoueursMaxReached);
+                    isNbMaxPlayersReached = true;
+                }
+
+            }
+        });
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.getChildren().add(addPlayerBtn);
 
         HBox submitBox = new HBox();
         Button submit = new Button("Lancer la partie");
+        submit.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                primaryStage.setScene(new Scene(createContent()));
+            }
+        });
         submitBox.setAlignment(Pos.CENTER);
         submitBox.getChildren().add(submit);
-
-        HBox fieldsBox = new HBox();
-        Label label1 = new Label("Joueur 1 :");
-        TextField textField = new TextField ();
-        fieldsBox.getChildren().addAll(label1, textField);
-        fieldsBox.setSpacing(10);
-        fieldsBox.setAlignment(Pos.CENTER);
 
         VBox mainBox = new VBox();
         mainBox.setSpacing(10);
@@ -138,7 +169,7 @@ public class Main extends Application {
         }
 
         public void closeOnStart() {
-            FadeTransition ft = new FadeTransition(Duration.seconds(0.1), text);
+            FadeTransition ft = new FadeTransition(Duration.seconds(0.01), text);
             ft.setToValue(0);
             ft.play();
         }
@@ -150,8 +181,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-//        primaryStage.setScene(new Scene(createContent()));
-        primaryStage.setScene(new Scene(createUserFields()));
+        primaryStage.setScene(new Scene(createUserFields(primaryStage)));
         primaryStage.show();
     }
 
