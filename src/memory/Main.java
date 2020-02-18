@@ -5,9 +5,11 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -20,8 +22,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class Main extends Application {
-    private static final int NUMBER_OF_PAIRS = 8;
-    private static final int NUMBER_PER_ROW = 4;
+    private static final int NUMBER_OF_PAIRS = 26;
+    private static final int NUMBER_PER_ROW = 8;
     private static Tile selected = null;
     private static int clickCount = 2;
 
@@ -43,6 +45,37 @@ public class Main extends Application {
             tile.setTranslateY(60 * (i / NUMBER_PER_ROW));
             root.getChildren().add(tile);
         }
+
+        return root;
+    }
+
+    private Parent createUserFields() {
+        StackPane root = new StackPane();
+        root.setPrefSize(600, 600);
+
+        HBox buttonBox = new HBox();
+        Button addPlayerBtn = new Button("+");
+        buttonBox.setAlignment(Pos.CENTER);
+        buttonBox.getChildren().add(addPlayerBtn);
+
+        HBox submitBox = new HBox();
+        Button submit = new Button("Lancer la partie");
+        submitBox.setAlignment(Pos.CENTER);
+        submitBox.getChildren().add(submit);
+
+        HBox fieldsBox = new HBox();
+        Label label1 = new Label("Joueur 1 :");
+        TextField textField = new TextField ();
+        fieldsBox.getChildren().addAll(label1, textField);
+        fieldsBox.setSpacing(10);
+        fieldsBox.setAlignment(Pos.CENTER);
+
+        VBox mainBox = new VBox();
+        mainBox.setSpacing(10);
+        mainBox.getChildren().addAll(fieldsBox, buttonBox, submitBox);
+        mainBox.setAlignment(Pos.CENTER);
+
+        root.getChildren().add(mainBox);
 
         return root;
     }
@@ -91,7 +124,7 @@ public class Main extends Application {
         }
 
         public void open(Runnable action) {
-            FadeTransition ft = new FadeTransition(Duration.seconds(0.3), text);
+            FadeTransition ft = new FadeTransition(Duration.seconds(0.5), text);
             ft.setToValue(1);
             ft.setOnFinished(e -> action.run());
             ft.play();
@@ -99,7 +132,7 @@ public class Main extends Application {
         }
 
         public void close() {
-            FadeTransition ft = new FadeTransition(Duration.seconds(1.5), text);
+            FadeTransition ft = new FadeTransition(Duration.seconds(0.5), text);
             ft.setToValue(0);
             ft.play();
         }
@@ -117,7 +150,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        primaryStage.setScene(new Scene(createContent()));
+//        primaryStage.setScene(new Scene(createContent()));
+        primaryStage.setScene(new Scene(createUserFields()));
         primaryStage.show();
     }
 
