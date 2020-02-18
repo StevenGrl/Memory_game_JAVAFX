@@ -19,6 +19,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import memory.models.Manager;
+import memory.models.Player;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,7 +35,8 @@ public class Main extends Application {
     private static int nbPlayers = 1;
     private static boolean isNbMaxPlayersReached = false;
 
-    private Parent createContent() {
+    private Parent createContent(Manager manager) {
+        System.out.println(manager.getNbPlayers());
         Pane root = new Pane();
         root.setPrefSize(1000, 1000);
         char c = 'A';
@@ -56,6 +59,7 @@ public class Main extends Application {
     }
 
     private Parent createUserFields(Stage primaryStage) {
+        List<TextField> labels = new ArrayList<>();
         StackPane root = new StackPane();
         root.setPrefSize(1000, 1000);
 
@@ -63,6 +67,7 @@ public class Main extends Application {
         fieldsBox.setPadding(new Insets(20, 50, 20, 50));
         Label label = new Label("Joueur 1 :");
         TextField textField = new TextField ();
+        labels.add(textField);
         fieldsBox.getChildren().addAll(label, textField);
         fieldsBox.setSpacing(10);
         fieldsBox.setAlignment(Pos.CENTER);
@@ -75,6 +80,7 @@ public class Main extends Application {
                 if (nbPlayers <= 7) {
                     Label labelPlayers = new Label("Joueur " + (nbPlayers + 1) + " :");
                     TextField textField = new TextField ();
+                    labels.add(textField);
                     fieldsBox.getChildren().addAll(labelPlayers, textField);
                     nbPlayers++;
                 } else if (!isNbMaxPlayersReached) {
@@ -95,7 +101,12 @@ public class Main extends Application {
         submit.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                primaryStage.setScene(new Scene(createContent()));
+                List<Player> players = new ArrayList<>();
+                for (int i = 0; i < labels.size(); i++) {
+                    players.add(new Player(labels.get(i).getText()));
+                }
+                Manager manager = new Manager(players);
+                primaryStage.setScene(new Scene(createContent(manager)));
             }
         });
         submitBox.setAlignment(Pos.CENTER);

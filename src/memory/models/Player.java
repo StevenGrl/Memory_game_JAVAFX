@@ -1,19 +1,18 @@
 package memory.models;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.StringProperty;
-
-import java.util.List;
-
 public class Player {
-    private final StringProperty name;
-    private final IntegerProperty score;
-    private final IntegerProperty rank;
+    private String name;
+    private Integer score;
+    private Integer rank;
 
-    public Player(StringProperty name, IntegerProperty score, IntegerProperty rank) {
+    public Player(String name, Integer score, Integer rank) {
         this.name = name;
         this.score = score;
         this.rank = rank;
+    }
+
+    public Player(String name) {
+        this(name, 0, 0);
     }
 
     @Override
@@ -22,38 +21,38 @@ public class Player {
     }
 
     public String getName() {
-        return name.get();
+        return name;
     }
 
     public void setName(String name) {
-        this.name.set(name);
+        this.name = name;
     }
 
-    public StringProperty nameProperty() {
+    public String name() {
         return name;
     }
 
     public Integer getScore() {
-        return score.get();
+        return score;
     }
 
     public void setScore(Integer score) {
-        this.score.set(score);
+        this.score = score;
     }
 
-    public IntegerProperty scoreProperty() {
+    public Integer score() {
         return score;
     }
 
     public Integer getRank() {
-        return rank.get();
+        return rank;
     }
 
     public void setRank(Integer rank) {
-        this.rank.set(rank);
+        this.rank = rank;
     }
 
-    public IntegerProperty rankProperty() {
+    public Integer rank() {
         return rank;
     }
 }

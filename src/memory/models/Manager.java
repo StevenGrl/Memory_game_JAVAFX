@@ -1,21 +1,16 @@
 package memory.models;
 
-
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.StringProperty;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class Manager {
 
     private List<Player> players;
-    private final IntegerProperty nbPlayers;
+    private int nbPlayers;
+    private static Player currentPlayer;
 
-    public Manager(List<Player> players, IntegerProperty nbPlayers) {
-        this.players = players;
-        this.nbPlayers = nbPlayers;
+    public Manager(List<Player> players) {
+        this.setPlayers(players);
+        this.setNbPlayers(players.size());
     }
 
     public List<Player> getPlayers() {
@@ -27,22 +22,27 @@ public class Manager {
     }
 
     public int getNbPlayers() {
-        return nbPlayers.get();
+        return nbPlayers;
     }
 
-    public IntegerProperty nbPlayersProperty() {
+    public int nbPlayers() {
         return nbPlayers;
     }
 
     public void setNbPlayers(int nbPlayers) {
-        this.nbPlayers.set(nbPlayers);
+        this.nbPlayers = nbPlayers;
     }
 
-    public void createPlayer(StringProperty playerName, IntegerProperty score, IntegerProperty rank){
-        players.add(new Player(playerName,score,rank));
+    public void createPlayer(String playerName, int score, int rank){
+        players.add(new Player(playerName, score, rank));
     }
 
 
+    public static Player getCurrentPlayer() {
+        return currentPlayer;
+    }
 
-
+    public static void setCurrentPlayer(Player currentPlayer) {
+        Manager.currentPlayer = currentPlayer;
+    }
 }
