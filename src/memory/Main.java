@@ -111,8 +111,6 @@ public class Main extends Application {
         }
 
             public boolean hasSameValue(Tile other) {
-                System.out.println(text.getText());
-                System.out.println(other.text.getText());
             return text.getText().equals(other.text.getText());
         }
     }
