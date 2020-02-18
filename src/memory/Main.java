@@ -102,7 +102,7 @@ public class Main extends Application {
 
         HBox nbCardsBox = new HBox();
         Label nbCardsLabel = new Label("Nombre de paires : ");
-        final ChoiceBox nbCardsChoice = new ChoiceBox(FXCollections.observableArrayList(8, 21, 32, 40, 78));
+        final ChoiceBox nbCardsChoice = new ChoiceBox(FXCollections.observableArrayList(    8, 21, 32, 40, 78));
 
         nbCardsBox.getChildren().addAll(nbCardsLabel, nbCardsChoice);
         nbCardsBox.setAlignment(Pos.CENTER);
@@ -113,8 +113,23 @@ public class Main extends Application {
         submit.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+                if (nbCardsChoice.getSelectionModel().selectedItemProperty().getValue() == null) {
+                    Label chooseNbCards = new Label("Choisissez un nombre de cartes");
+                    chooseNbCards.setFont(Font.font(25));
+                    chooseNbCards.setTextFill(Color.RED);
+                    fieldsBox.getChildren().add(chooseNbCards);
+                    return;
+                }
+
                 List<Player> players = new ArrayList<>();
                 for (int i = 0; i < labels.size(); i++) {
+                    if (labels.get(i).getText().isEmpty()) {
+                        Label emptyPlayer = new Label("Il y a un joueur vide, veuillez le remplir");
+                        emptyPlayer.setFont(Font.font(25));
+                        emptyPlayer.setTextFill(Color.RED);
+                        fieldsBox.getChildren().add(emptyPlayer);
+                        return;
+                    }
                     players.add(new Player(labels.get(i).getText()));
                 }
                 Manager manager = new Manager(players);
