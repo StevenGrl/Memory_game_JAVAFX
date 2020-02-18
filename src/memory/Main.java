@@ -77,6 +77,9 @@ public class Main extends Application {
         fieldsBox.setSpacing(10);
         fieldsBox.setAlignment(Pos.CENTER);
 
+        VBox errorBox = new VBox();
+        errorBox.setAlignment(Pos.CENTER);
+
         HBox buttonBox = new HBox();
         Button addPlayerBtn = new Button("+");
         addPlayerBtn.setOnAction(new EventHandler<ActionEvent>() {
@@ -92,7 +95,7 @@ public class Main extends Application {
                     Label nbJoueursMaxReached = new Label("Nombre de joueurs maximum atteint");
                     nbJoueursMaxReached.setFont(Font.font(25));
                     nbJoueursMaxReached.setTextFill(Color.RED);
-                    fieldsBox.getChildren().add(nbJoueursMaxReached);
+                    errorBox.getChildren().add(nbJoueursMaxReached);
                     isNbMaxPlayersReached = true;
                 }
             }
@@ -103,6 +106,7 @@ public class Main extends Application {
         HBox nbCardsBox = new HBox();
         Label nbCardsLabel = new Label("Nombre de paires : ");
         final ChoiceBox nbCardsChoice = new ChoiceBox(FXCollections.observableArrayList(    8, 21, 32, 40, 78));
+        nbCardsChoice.setValue(8);
 
         nbCardsBox.getChildren().addAll(nbCardsLabel, nbCardsChoice);
         nbCardsBox.setAlignment(Pos.CENTER);
@@ -113,21 +117,14 @@ public class Main extends Application {
         submit.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                if (nbCardsChoice.getSelectionModel().selectedItemProperty().getValue() == null) {
-                    Label chooseNbCards = new Label("Choisissez un nombre de cartes");
-                    chooseNbCards.setFont(Font.font(25));
-                    chooseNbCards.setTextFill(Color.RED);
-                    fieldsBox.getChildren().add(chooseNbCards);
-                    return;
-                }
-
+                errorBox.getChildren().removeAll(errorBox.getChildren());
                 List<Player> players = new ArrayList<>();
                 for (int i = 0; i < labels.size(); i++) {
-                    if (labels.get(i).getText().isEmpty()) {
+                    if (labels.get(i).getText().isBlank()) {
                         Label emptyPlayer = new Label("Il y a un joueur vide, veuillez le remplir");
                         emptyPlayer.setFont(Font.font(25));
                         emptyPlayer.setTextFill(Color.RED);
-                        fieldsBox.getChildren().add(emptyPlayer);
+                        errorBox.getChildren().add(emptyPlayer);
                         return;
                     }
                     players.add(new Player(labels.get(i).getText()));
@@ -143,7 +140,7 @@ public class Main extends Application {
 
         VBox mainBox = new VBox();
         mainBox.setSpacing(20);
-        mainBox.getChildren().addAll(fieldsBox, buttonBox, nbCardsBox,submitBox);
+        mainBox.getChildren().addAll(fieldsBox, buttonBox, nbCardsBox, errorBox, submitBox);
         mainBox.setAlignment(Pos.CENTER);
 
         root.getChildren().add(mainBox);
