@@ -25,10 +25,6 @@ public class Manager {
         return nbPlayers;
     }
 
-    public int nbPlayers() {
-        return nbPlayers;
-    }
-
     public void setNbPlayers(int nbPlayers) {
         this.nbPlayers = nbPlayers;
     }

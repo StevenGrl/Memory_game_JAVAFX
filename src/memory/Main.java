@@ -32,8 +32,8 @@ import java.util.List;
 
 public class Main extends Application {
     private static final int MAX_PLAYERS = 4;
-    private static final int NUMBER_OF_PAIRS = 26;
-    private static final int NUMBER_PER_ROW = 8;
+    private static int NUMBER_OF_PAIRS = 32;
+    private static int NUMBER_PER_ROW;
     private static Tile selected = null;
     private static int clickCount = 2;
     private static List<String> players = new ArrayList<>();
@@ -95,21 +95,15 @@ public class Main extends Application {
                     fieldsBox.getChildren().add(nbJoueursMaxReached);
                     isNbMaxPlayersReached = true;
                 }
-
             }
         });
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.getChildren().add(addPlayerBtn);
 
         HBox nbCardsBox = new HBox();
-        Label nbCardsLabel = new Label("Nombre de cartes : ");
-        final ChoiceBox nbCardsChoice = new ChoiceBox(FXCollections.observableArrayList(8, 16, 32));
-        nbCardsChoice.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
-            @Override
-            public void changed(ObservableValue observableValue, Object o, Object t1) {
-                System.out.println(nbCardsChoice.getSelectionModel().selectedItemProperty().getValue());
-            }
-        });
+        Label nbCardsLabel = new Label("Nombre de paires : ");
+        final ChoiceBox nbCardsChoice = new ChoiceBox(FXCollections.observableArrayList(8, 21, 32, 40, 78));
+
         nbCardsBox.getChildren().addAll(nbCardsLabel, nbCardsChoice);
         nbCardsBox.setAlignment(Pos.CENTER);
         nbCardsBox.setSpacing(10);
@@ -124,6 +118,8 @@ public class Main extends Application {
                     players.add(new Player(labels.get(i).getText()));
                 }
                 Manager manager = new Manager(players);
+                NUMBER_OF_PAIRS = Integer.valueOf(nbCardsChoice.getSelectionModel().selectedItemProperty().getValue().toString());
+                setNumberPerRow(NUMBER_OF_PAIRS);
                 primaryStage.setScene(new Scene(createContent(manager)));
             }
         });
@@ -206,6 +202,10 @@ public class Main extends Application {
             public boolean hasSameValue(Tile other) {
             return text.getText().equals(other.text.getText());
         }
+    }
+
+    public void setNumberPerRow(int nbPairs) {
+        NUMBER_PER_ROW = (int) Math.sqrt(NUMBER_OF_PAIRS*2);
     }
 
     @Override
