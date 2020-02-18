@@ -57,10 +57,19 @@ public class Main extends Application {
             Tile tile = tiles.get(i);
             tile.setTranslateX(50 * (i % NUMBER_PER_ROW));
             tile.setTranslateY(60 * (i / NUMBER_PER_ROW));
+            tile.setOnMouseEntered((MouseEvent t) -> {
+                tile.setBackground(new Background(new BackgroundFill(Color.rgb(220, 220, 220), CornerRadii.EMPTY, Insets.EMPTY)));
+            });
+            tile.setOnMouseExited((MouseEvent t) -> {
+                tile.setBackground(new Background(new BackgroundFill(Color.rgb(250, 250, 250), CornerRadii.EMPTY, Insets.EMPTY)));
+            });
             root.getChildren().add(tile);
         }
 
-        return root;
+        HBox grille = new HBox();
+        grille.getChildren().add(root);
+        grille.setPadding(new Insets(25));
+        return grille;
     }
 
     private Parent createUserFields(Stage primaryStage) {
