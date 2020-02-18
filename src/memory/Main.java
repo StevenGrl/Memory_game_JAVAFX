@@ -92,6 +92,7 @@ public class Main extends Application {
         fieldsBox.setPadding(new Insets(20, 50, 20, 50));
         Label label = new Label("Joueur 1 :");
         TextField textField = new TextField ();
+        textField.setMaxWidth(150);
         labels.add(textField);
         fieldsBox.getChildren().addAll(label, textField);
         fieldsBox.setSpacing(10);
@@ -108,6 +109,7 @@ public class Main extends Application {
                 if (nbPlayers < MAX_PLAYERS) {
                     Label labelPlayers = new Label("Joueur " + (nbPlayers + 1) + " :");
                     TextField textField = new TextField ();
+                    textField.setMaxWidth(150);
                     labels.add(textField);
                     fieldsBox.getChildren().addAll(labelPlayers, textField);
                     nbPlayers++;
