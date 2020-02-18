@@ -77,7 +77,7 @@ public class Main extends Application {
         addPlayerBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (nbPlayers <= 7) {
+                if (nbPlayers <= 3) {
                     Label labelPlayers = new Label("Joueur " + (nbPlayers + 1) + " :");
                     TextField textField = new TextField ();
                     labels.add(textField);
