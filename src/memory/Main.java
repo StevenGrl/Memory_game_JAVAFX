@@ -36,12 +36,10 @@ public class Main extends Application {
     private static int NUMBER_PER_ROW;
     private static Tile selected = null;
     private static int clickCount = 2;
-    private static List<String> players = new ArrayList<>();
     private static int nbPlayers = 1;
     private static boolean isNbMaxPlayersReached = false;
 
     private Parent createContent(Manager manager) {
-        System.out.println(manager.getNbPlayers());
         Pane root = new Pane();
         root.setPrefSize(800, 800);
         char c = 'A';
@@ -67,9 +65,22 @@ public class Main extends Application {
         }
 
         HBox grille = new HBox();
-        grille.getChildren().add(root);
         grille.setPadding(new Insets(25));
-        return grille;
+        root.getChildren().add(grille);
+
+        VBox playerBox = new VBox();
+        playerBox.setAlignment(Pos.CENTER_RIGHT);
+        for (int i = 0; i < manager.getNbPlayers(); i++){
+            System.out.println(manager.getPlayers().get(i));
+            
+
+            // utiliser la méthode setLabel
+            // mettre le label dans la box
+        }
+
+        root.getChildren().add(playerBox);
+
+        return root;
     }
 
     private Parent createUserFields(Stage primaryStage) {
@@ -223,6 +234,10 @@ public class Main extends Application {
             public boolean hasSameValue(Tile other) {
             return text.getText().equals(other.text.getText());
         }
+    }
+
+    public Label setLabel(Player player) {
+        return new Label(player.getName() + " score :" + player.getScore() + " rank : " + player.getRank());
     }
 
     public void setNumberPerRow(int nbPairs) {
