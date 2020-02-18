@@ -43,7 +43,7 @@ public class Main extends Application {
     private Parent createContent(Manager manager) {
         System.out.println(manager.getNbPlayers());
         Pane root = new Pane();
-        root.setPrefSize(1000, 1000);
+        root.setPrefSize(800, 800);
         char c = 'A';
         List<Tile> tiles = new ArrayList<>();
         for (int i = 0; i < NUMBER_OF_PAIRS; i++) {
@@ -66,7 +66,7 @@ public class Main extends Application {
     private Parent createUserFields(Stage primaryStage) {
         List<TextField> labels = new ArrayList<>();
         StackPane root = new StackPane();
-        root.setPrefSize(1000, 1000);
+        root.setPrefSize(800, 800);
 
         VBox fieldsBox = new VBox();
         fieldsBox.setPadding(new Insets(20, 50, 20, 50));
