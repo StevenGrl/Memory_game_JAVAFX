@@ -2,6 +2,9 @@ package memory;
 
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -9,6 +12,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -27,6 +31,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class Main extends Application {
+    private static final int MAX_PLAYERS = 4;
     private static final int NUMBER_OF_PAIRS = 26;
     private static final int NUMBER_PER_ROW = 8;
     private static Tile selected = null;
@@ -77,14 +82,14 @@ public class Main extends Application {
         addPlayerBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (nbPlayers <= 3) {
+                if (nbPlayers < MAX_PLAYERS) {
                     Label labelPlayers = new Label("Joueur " + (nbPlayers + 1) + " :");
                     TextField textField = new TextField ();
                     labels.add(textField);
                     fieldsBox.getChildren().addAll(labelPlayers, textField);
                     nbPlayers++;
                 } else if (!isNbMaxPlayersReached) {
-                    Label nbJoueursMaxReached = new Label("Nombre de joueur maximum atteint");
+                    Label nbJoueursMaxReached = new Label("Nombre de joueurs maximum atteint");
                     nbJoueursMaxReached.setFont(Font.font(25));
                     nbJoueursMaxReached.setTextFill(Color.RED);
                     fieldsBox.getChildren().add(nbJoueursMaxReached);
@@ -95,6 +100,19 @@ public class Main extends Application {
         });
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.getChildren().add(addPlayerBtn);
+
+        HBox nbCardsBox = new HBox();
+        Label nbCardsLabel = new Label("Nombre de cartes : ");
+        final ChoiceBox nbCardsChoice = new ChoiceBox(FXCollections.observableArrayList(8, 16, 32));
+        nbCardsChoice.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observableValue, Object o, Object t1) {
+                System.out.println(nbCardsChoice.getSelectionModel().selectedItemProperty().getValue());
+            }
+        });
+        nbCardsBox.getChildren().addAll(nbCardsLabel, nbCardsChoice);
+        nbCardsBox.setAlignment(Pos.CENTER);
+        nbCardsBox.setSpacing(10);
 
         HBox submitBox = new HBox();
         Button submit = new Button("Lancer la partie");
@@ -113,8 +131,8 @@ public class Main extends Application {
         submitBox.getChildren().add(submit);
 
         VBox mainBox = new VBox();
-        mainBox.setSpacing(10);
-        mainBox.getChildren().addAll(fieldsBox, buttonBox, submitBox);
+        mainBox.setSpacing(20);
+        mainBox.getChildren().addAll(fieldsBox, buttonBox, nbCardsBox,submitBox);
         mainBox.setAlignment(Pos.CENTER);
 
         root.getChildren().add(mainBox);
