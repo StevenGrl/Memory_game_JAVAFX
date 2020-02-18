@@ -72,8 +72,8 @@ public class Main extends Application {
         playerBox.setAlignment(Pos.CENTER_RIGHT);
         for (int i = 0; i < manager.getNbPlayers(); i++){
             System.out.println(manager.getPlayers().get(i));
-            
-
+            Label lab = setLabel(manager.getPlayers().get(i));
+            playerBox.getChildren().add(lab);
             // utiliser la méthode setLabel
             // mettre le label dans la box
         }
