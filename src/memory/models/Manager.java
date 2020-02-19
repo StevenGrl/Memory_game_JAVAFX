@@ -75,6 +75,15 @@ public class Manager {
         Manager.currentPlayer.getBox().getChildren().add(lab);
     }
 
+    public static void refreshAllLabel() {
+        for (int i = 0; i < getPlayers().size(); i++) {
+            Label lab = (Label) Manager.getPlayers().get(i).getBox().getChildren().get(0);
+            lab.setText(Manager.getPlayers().get(i).getLabel());
+            Manager.getPlayers().get(i).getBox().getChildren().removeAll(Manager.getPlayers().get(i).getBox().getChildren());
+            Manager.getPlayers().get(i).getBox().getChildren().add(lab);
+        }
+    }
+
 //    public static void rank() {
 //        Manager.getCurrentPlayer().setScore(Manager.getCurrentPlayer().getScore() + 1);
 //        Label lab = (Label) Manager.currentPlayer.getBox().getChildren().get(0);
@@ -99,5 +108,12 @@ public class Manager {
             }
         }
         return bestPlayer;
+    }
+
+    public static void resetScore() {
+        for (int i = 0; i < getPlayers().size(); i++) {
+            getPlayers().get(i).setScore(0);
+            System.out.println(getPlayers().get(i).getScore());
+        }
     }
 }

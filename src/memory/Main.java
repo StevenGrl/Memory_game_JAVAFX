@@ -38,7 +38,7 @@ public class Main extends Application {
     private static int nbPlayers = 1;
     private static boolean isNbMaxPlayersReached = false;
 
-    private Parent createContent(Manager manager) {
+    private Parent createContent(Stage primaryStage, Manager manager) {
         VBox root = new VBox();
         root.setPrefSize(800, 800);
         int nb = 1;
@@ -81,7 +81,31 @@ public class Main extends Application {
         boxPlayers.setPadding(new Insets(15));
         boxPlayers.setSpacing(5);
 
-        root.getChildren().addAll(boxPlayers, grid);
+        HBox footer = new HBox();
+        footer.setPadding(new Insets(5));
+        footer.setSpacing(5);
+        footer.setAlignment(Pos.BOTTOM_RIGHT);
+        Button replayButton = new Button("Recommencer");
+        Button menuButton = new Button("Menu");
+        footer.getChildren().addAll(replayButton, menuButton);
+
+        menuButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                primaryStage.setScene(new Scene(createUserFields(primaryStage)));
+            }
+        });
+
+        replayButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                Manager.resetScore();
+                Manager.refreshAllLabel();
+                primaryStage.setScene(new Scene(createContent(primaryStage, manager)));
+            }
+        });
+
+        root.getChildren().addAll(boxPlayers, grid, footer);
 
         return root;
     }
@@ -181,7 +205,7 @@ public class Main extends Application {
                 NUMBER_OF_PAIRS = Integer.valueOf(nbCardsChoice.getSelectionModel().selectedItemProperty().getValue().toString());
                 Manager manager = new Manager(players, NUMBER_OF_PAIRS);
                 setNumberPerRow();
-                primaryStage.setScene(new Scene(createContent(manager)));
+                primaryStage.setScene(new Scene(createContent(primaryStage, manager)));
             }
         });
         submitBox.setAlignment(Pos.CENTER);
