@@ -142,6 +142,8 @@ public class Main extends Application {
                 }
             }
         });
+        addPlayerBtn.setMinWidth(30);
+        removePlayerBtn.setMinWidth(30);
         buttonBox.getChildren().addAll(addPlayerBtn, removePlayerBtn);
         buttonBox.setSpacing(10);
 
@@ -163,7 +165,7 @@ public class Main extends Application {
                 List<Player> players = new ArrayList<>();
                 for (int i = 0; i < nbPlayers; i++) {
                     if (labels.get(i).getText().isBlank()) {
-                        Label emptyPlayer = new Label("Il y a un joueur vide, veuillez le remplir");
+                        Label emptyPlayer = new Label("Il y a au moins un joueur vide, veuillez le(s) remplir");
                         emptyPlayer.setFont(Font.font(25));
                         emptyPlayer.setTextFill(Color.RED);
                         errorBox.getChildren().add(emptyPlayer);
