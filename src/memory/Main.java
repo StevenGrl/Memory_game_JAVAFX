@@ -72,7 +72,7 @@ public class Main extends Application {
         VBox playerBox = new VBox();
         playerBox.setAlignment(Pos.TOP_RIGHT);
         playerBox.setBorder(new Border(new BorderStroke(Color.LIGHTGREY, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(4))));
-        for (int i = 0; i < manager.getNbPlayers(); i++){
+        for (int i = 0; i < manager.getNbPlayers(); i++) {
             Label lab = setLabel(manager.getPlayers().get(i));
             playerBox.getChildren().add(lab);
         }
@@ -92,7 +92,7 @@ public class Main extends Application {
         VBox fieldsBox = new VBox();
         fieldsBox.setPadding(new Insets(20, 50, 20, 50));
         Label label = new Label("Joueur 1 :");
-        TextField textField = new TextField ();
+        TextField textField = new TextField();
         textField.setMaxWidth(150);
         labels.add(textField);
         fieldsBox.getChildren().addAll(label, textField);
@@ -103,13 +103,15 @@ public class Main extends Application {
         errorBox.setAlignment(Pos.CENTER);
 
         HBox buttonBox = new HBox();
+        buttonBox.setAlignment(Pos.CENTER);
+
         Button addPlayerBtn = new Button("+");
         addPlayerBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 if (nbPlayers < MAX_PLAYERS) {
                     Label labelPlayers = new Label("Joueur " + (nbPlayers + 1) + " :");
-                    TextField textField = new TextField ();
+                    TextField textField = new TextField();
                     textField.setMaxWidth(150);
                     labels.add(textField);
                     fieldsBox.getChildren().addAll(labelPlayers, textField);
@@ -123,12 +125,29 @@ public class Main extends Application {
                 }
             }
         });
-        buttonBox.setAlignment(Pos.CENTER);
-        buttonBox.getChildren().add(addPlayerBtn);
+
+        Button removePlayerBtn = new Button("-");
+        removePlayerBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (nbPlayers == 1) {
+                    Label nbMinJoueurs = new Label("Il doit rester au moins 1 joueur");
+                    nbMinJoueurs.setFont(Font.font(25));
+                    nbMinJoueurs.setTextFill(Color.RED);
+                    errorBox.getChildren().add(nbMinJoueurs);
+                } else {
+                    nbPlayers--;
+                    fieldsBox.getChildren().remove(fieldsBox.getChildren().size() - 1);
+                    fieldsBox.getChildren().remove(fieldsBox.getChildren().size() - 1);
+                }
+            }
+        });
+        buttonBox.getChildren().addAll(addPlayerBtn, removePlayerBtn);
+        buttonBox.setSpacing(10);
 
         HBox nbCardsBox = new HBox();
         Label nbCardsLabel = new Label("Nombre de paires : ");
-        final ChoiceBox nbCardsChoice = new ChoiceBox(FXCollections.observableArrayList(    8, 21, 32, 40, 78));
+        final ChoiceBox nbCardsChoice = new ChoiceBox(FXCollections.observableArrayList(8, 21, 32, 40, 78));
         nbCardsChoice.setValue(8);
 
         nbCardsBox.getChildren().addAll(nbCardsLabel, nbCardsChoice);
@@ -142,7 +161,7 @@ public class Main extends Application {
             public void handle(ActionEvent actionEvent) {
                 errorBox.getChildren().removeAll(errorBox.getChildren());
                 List<Player> players = new ArrayList<>();
-                for (int i = 0; i < labels.size(); i++) {
+                for (int i = 0; i < nbPlayers; i++) {
                     if (labels.get(i).getText().isBlank()) {
                         Label emptyPlayer = new Label("Il y a un joueur vide, veuillez le remplir");
                         emptyPlayer.setFont(Font.font(25));
@@ -197,7 +216,8 @@ public class Main extends Application {
             clickCount--;
             if (selected == null) {
                 selected = this;
-                open(() -> {});
+                open(() -> {
+                });
             } else {
                 open(() -> {
                     if (!hasSameValue(selected)) {
@@ -209,6 +229,9 @@ public class Main extends Application {
                         this.text.setFill(Color.GREY);
                         Manager.incrementScore();
                         System.out.println("game over : " + Manager.isGameOver());
+                        if (Manager.isGameOver()) {
+                            System.out.println("And the best player iiiiiiiiiiiiiiiiiis : " + Manager.getBestPlayer().getName());
+                        }
                     }
                     selected = null;
                     clickCount = 2;
@@ -240,7 +263,7 @@ public class Main extends Application {
             ft.play();
         }
 
-            public boolean hasSameValue(Tile other) {
+        public boolean hasSameValue(Tile other) {
             return text.getText().equals(other.text.getText());
         }
     }
@@ -250,7 +273,7 @@ public class Main extends Application {
     }
 
     public void setNumberPerRow(int nbPairs) {
-        NUMBER_PER_ROW = (int) Math.sqrt(NUMBER_OF_PAIRS*2);
+        NUMBER_PER_ROW = (int) Math.sqrt(NUMBER_OF_PAIRS * 2);
     }
 
     @Override

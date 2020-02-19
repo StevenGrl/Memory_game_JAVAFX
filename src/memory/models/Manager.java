@@ -62,4 +62,14 @@ public class Manager {
         }
         return totalScore == nbPairs;
     }
+
+    public static Player getBestPlayer() {
+        Player bestPlayer = getPlayers().get(0);
+        for (int i = 1; i < getPlayers().size(); i++) {
+            if (bestPlayer.getScore() < getPlayers().get(i).getScore()) {
+                bestPlayer = getPlayers().get(i);
+            }
+        }
+        return bestPlayer;
+    }
 }
