@@ -69,14 +69,14 @@ public class Main extends Application {
         grid.setHgap(5);
         grid.setAlignment(Pos.TOP_CENTER);
 
-        VBox boxPlayers = new VBox();
-        boxPlayers.setAlignment(Pos.TOP_RIGHT);
+        HBox boxPlayers = new HBox();
+        boxPlayers.setAlignment(Pos.TOP_CENTER);
         boxPlayers.setBorder(new Border(new BorderStroke(Color.LIGHTGREY, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(4))));
         for (int i = 0; i < manager.getNbPlayers(); i++) {
             boxPlayers.getChildren().add(Manager.getPlayers().get(i).getBox());
         }
         boxPlayers.setPadding(new Insets(15));
-        boxPlayers.setPrefWidth(100000);
+        boxPlayers.setSpacing(5);
 
         root.getChildren().addAll(boxPlayers, grid);
 
@@ -170,7 +170,7 @@ public class Main extends Application {
                         errorBox.getChildren().add(emptyPlayer);
                         return;
                     }
-                    HBox playerBox = new HBox();
+                    VBox playerBox = new VBox();
                     Label playerLabel = new Label();
                     playerBox.getChildren().add(playerLabel);
                     players.add(new Player(labels.get(i).getText(), playerBox));

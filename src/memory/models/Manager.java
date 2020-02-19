@@ -1,6 +1,7 @@
 package memory.models;
 
 import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
 
 import java.util.List;
 import java.util.Random;
@@ -11,12 +12,15 @@ public class Manager {
     private static int nbPlayers;
     private static Player currentPlayer;
     private static int nbPairs;
+    private static final Color bgNotCurrent = Color.WHITE;
+    private static final Color bgCurrent = Color.rgb(116, 208, 241);
 
     public Manager(List<Player> players, int nbPairs) {
         Random rand = new Random(System.currentTimeMillis());
         this.setPlayers(players);
         this.setNbPlayers(players.size());
         Manager.currentPlayer = getPlayers().get(rand.nextInt(getPlayers().size()));
+        currentPlayer.setBackground(bgCurrent);
         Manager.nbPairs = nbPairs;
     }
 
@@ -43,12 +47,14 @@ public class Manager {
 
     public static void setNextPlayer() {
         System.out.println("Previous player : " + Manager.getCurrentPlayer());
+        currentPlayer.setBackground(bgNotCurrent);
         int nextPlayerIndex;
         nextPlayerIndex = getPlayers().indexOf(Manager.currentPlayer) + 1;
         if (nextPlayerIndex >= getPlayers().size()) {
             nextPlayerIndex = 0;
         }
         Manager.currentPlayer = getPlayers().get(nextPlayerIndex);
+        currentPlayer.setBackground(bgCurrent);
         System.out.println("Next player : " + Manager.getCurrentPlayer());
     }
 

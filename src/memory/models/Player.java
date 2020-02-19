@@ -1,22 +1,24 @@
 package memory.models;
 
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 
 public class Player {
     private String name;
     private Integer score;
     private Integer rank;
-    private HBox box;
+    private VBox box;
 
-    public Player(String name, Integer score, Integer rank, HBox playerBox) {
+    public Player(String name, Integer score, Integer rank, VBox playerBox) {
         this.name = name;
         this.score = score;
         this.rank = rank;
         this.setBox(playerBox);
     }
 
-    public Player(String name, HBox playerBox) {
+    public Player(String name, VBox playerBox) {
         this(name, 0, 0, playerBox);
     }
 
@@ -62,18 +64,24 @@ public class Player {
     }
 
     public String getLabel() {
-        return this.getName() + " score :" + this.getScore() + " rank : " + this.getRank();
+        return this.getName() + "\nScore : " + this.getScore() + "\nRank : " + this.getRank();
     }
 
-    public HBox getBox() {
+    public VBox getBox() {
         return box;
     }
 
-    public void setBox(HBox box) {
+    public void setBox(VBox box) {
         Label label = (Label) box.getChildren().get(0);
         label.setText(this.getLabel());
         box.getChildren().removeAll(box.getChildren());
         box.getChildren().add(label);
+        box.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(1))));
+        box.setPadding(new Insets(3));
         this.box = box;
+    }
+
+    public void setBackground(Color color) {
+        this.getBox().setBackground(new Background(new BackgroundFill(color, new CornerRadii(5), Insets.EMPTY)));
     }
 }
