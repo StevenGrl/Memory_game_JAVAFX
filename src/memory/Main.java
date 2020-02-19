@@ -104,6 +104,8 @@ public class Main extends Application {
         errorBox.setAlignment(Pos.CENTER);
 
         HBox buttonBox = new HBox();
+        buttonBox.setAlignment(Pos.CENTER);
+
         Button addPlayerBtn = new Button("+");
         addPlayerBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -124,8 +126,25 @@ public class Main extends Application {
                 }
             }
         });
-        buttonBox.setAlignment(Pos.CENTER);
-        buttonBox.getChildren().add(addPlayerBtn);
+
+        Button removePlayerBtn = new Button("-");
+        removePlayerBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (nbPlayers == 1) {
+                    Label nbMinJoueurs = new Label("Il doit rester au moins 1 joueur");
+                    nbMinJoueurs.setFont(Font.font(25));
+                    nbMinJoueurs.setTextFill(Color.RED);
+                    errorBox.getChildren().add(nbMinJoueurs);
+                } else {
+                    nbPlayers--;
+                    fieldsBox.getChildren().remove(fieldsBox.getChildren().size() - 1);
+                    fieldsBox.getChildren().remove(fieldsBox.getChildren().size() - 1);
+                }
+            }
+        });
+        buttonBox.getChildren().addAll(addPlayerBtn, removePlayerBtn);
+        buttonBox.setSpacing(10);
 
         HBox nbCardsBox = new HBox();
         Label nbCardsLabel = new Label("Nombre de paires : ");
