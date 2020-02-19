@@ -162,7 +162,7 @@ public class Main extends Application {
             public void handle(ActionEvent actionEvent) {
                 errorBox.getChildren().removeAll(errorBox.getChildren());
                 List<Player> players = new ArrayList<>();
-                for (int i = 0; i < labels.size(); i++) {
+                for (int i = 0; i < nbPlayers; i++) {
                     if (labels.get(i).getText().isBlank()) {
                         Label emptyPlayer = new Label("Il y a un joueur vide, veuillez le remplir");
                         emptyPlayer.setFont(Font.font(25));
