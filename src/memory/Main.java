@@ -41,7 +41,7 @@ public class Main extends Application {
     private static boolean isNbMaxPlayersReached = false;
 
     private Parent createContent(Manager manager) {
-        Pane root = new Pane();
+        VBox root = new VBox();
         root.setPrefSize(800, 800);
         int nb = 1;
         List<Tile> tiles = new ArrayList<>();
@@ -52,35 +52,34 @@ public class Main extends Application {
         }
         Collections.shuffle(tiles);
 
-        GridPane grille = new GridPane();
+        GridPane grid = new GridPane();
         for (int i = 0; i < tiles.size(); i++) {
             Tile tile = tiles.get(i);
-            tile.setTranslateX(50 * (i % NUMBER_PER_ROW));
-            tile.setTranslateY(60 * (i / NUMBER_PER_ROW));
             tile.setOnMouseEntered((MouseEvent t) -> {
                 tile.setBackground(new Background(new BackgroundFill(Color.rgb(220, 220, 220), CornerRadii.EMPTY, Insets.EMPTY)));
             });
             tile.setOnMouseExited((MouseEvent t) -> {
                 tile.setBackground(new Background(new BackgroundFill(Color.rgb(250, 250, 250), CornerRadii.EMPTY, Insets.EMPTY)));
             });
-            //grille.setPadding(new Insets(15,15,15,15));
-            grille.getChildren().add(tile);
+            grid.add(tile, (i % NUMBER_PER_ROW), (i / NUMBER_PER_ROW));
         }
 
-//
-        grille.setPadding(new Insets(15));
-        root.getChildren().add(grille);
+        grid.setPadding(new Insets(15));
+        grid.setVgap(5);
+        grid.setHgap(5);
+        grid.setAlignment(Pos.TOP_CENTER);
 
         VBox playerBox = new VBox();
-        playerBox.setAlignment(Pos.CENTER_RIGHT);
+        playerBox.setAlignment(Pos.TOP_RIGHT);
+        playerBox.setBorder(new Border(new BorderStroke(Color.LIGHTGREY, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(4))));
         for (int i = 0; i < manager.getNbPlayers(); i++){
             Label lab = setLabel(manager.getPlayers().get(i));
             playerBox.getChildren().add(lab);
         }
-        playerBox.setPadding(new Insets(15, 15, 15, 650));
+        playerBox.setPadding(new Insets(15));
+        playerBox.setPrefWidth(100000);
 
-
-        root.getChildren().add(playerBox);
+        root.getChildren().addAll(playerBox, grid);
 
         return root;
     }
