@@ -3,6 +3,8 @@ package memory.models;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -22,6 +24,8 @@ public class Manager {
         Manager.currentPlayer = getPlayers().get(rand.nextInt(getPlayers().size()));
         currentPlayer.setBackground(bgCurrent);
         Manager.nbPairs = nbPairs;
+
+        refreshAllLabel();
     }
 
     public static List<Player> getPlayers() {
@@ -83,14 +87,6 @@ public class Manager {
             Manager.getPlayers().get(i).getBox().getChildren().add(lab);
         }
     }
-
-//    public static void rank() {
-//        Manager.getCurrentPlayer().setScore(Manager.getCurrentPlayer().getScore() + 1);
-//        Label lab = (Label) Manager.currentPlayer.getBox().getChildren().get(0);
-//        lab.setText(Manager.currentPlayer.getLabel());
-//        Manager.currentPlayer.getBox().getChildren().removeAll(Manager.currentPlayer.getBox().getChildren());
-//        Manager.currentPlayer.getBox().getChildren().add(lab);
-//    }
 
     public static boolean isGameOver() {
         int totalScore = 0;
