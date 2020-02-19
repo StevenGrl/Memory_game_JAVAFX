@@ -2,22 +2,27 @@ package memory.models;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 public class Player {
     private String name;
     private Integer score;
+    private Integer nbBombe;
     private VBox box;
+    private ImageView imageView;
 
-    public Player(String name, Integer score, VBox playerBox) {
+    public Player(String name, Integer score, Integer nbBombe, VBox playerBox) {
         this.name = name;
         this.score = score;
+        this.nbBombe = nbBombe;
         this.setBox(playerBox);
     }
 
     public Player(String name, VBox playerBox) {
-        this(name, 0, playerBox);
+        this(name, 0,0, playerBox);
     }
 
     @Override
@@ -47,6 +52,14 @@ public class Player {
 
     public Integer score() {
         return score;
+    }
+
+    public Integer getNbBombe() {
+        return nbBombe;
+    }
+
+    public void setNbBombe(Integer nbBombe) {
+        this.nbBombe = nbBombe;
     }
 
     public String getLabel() {
