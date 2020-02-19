@@ -205,6 +205,9 @@ public class Main extends Application {
                     if (!hasSameValue(selected)) {
                         selected.close();
                         this.close();
+                    } else {
+                        selected.text.setFill(Color.GREY);
+                        this.text.setFill(Color.GREY);
                     }
                     selected = null;
                     clickCount = 2;
