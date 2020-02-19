@@ -59,7 +59,16 @@ public class Manager {
     }
 
     public static void incrementScore() {
-        Manager.getCurrentPlayer().setScore(Manager.getCurrentPlayer().getScore() + 1);
+        currentPlayer.setScore(currentPlayer.getScore() + 1);
+        refreshLabel();
+    }
+
+    public static void decrementScore() {
+        currentPlayer.setScore(currentPlayer.getScore() - 1);
+        refreshLabel();
+    }
+
+    public static void refreshLabel() {
         Label lab = (Label) Manager.currentPlayer.getBox().getChildren().get(0);
         lab.setText(Manager.currentPlayer.getLabel());
         Manager.currentPlayer.getBox().getChildren().removeAll(Manager.currentPlayer.getBox().getChildren());

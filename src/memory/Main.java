@@ -2,8 +2,6 @@ package memory;
 
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -15,13 +13,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import memory.models.Manager;
@@ -50,6 +49,11 @@ public class Main extends Application {
             tiles.add(new Tile(String.valueOf(nb)));
             nb++;
         }
+
+        for (int i = 0; i < NUMBER_PER_ROW; i++) {
+            tiles.add(new Tile("Bomb"));
+        }
+
         Collections.shuffle(tiles);
 
         GridPane grid = new GridPane();
@@ -177,7 +181,7 @@ public class Main extends Application {
                 }
                 NUMBER_OF_PAIRS = Integer.valueOf(nbCardsChoice.getSelectionModel().selectedItemProperty().getValue().toString());
                 Manager manager = new Manager(players, NUMBER_OF_PAIRS);
-                setNumberPerRow(NUMBER_OF_PAIRS);
+                setNumberPerRow();
                 primaryStage.setScene(new Scene(createContent(manager)));
             }
         });
@@ -195,21 +199,26 @@ public class Main extends Application {
     }
 
     private static class Tile extends StackPane {
-        private Text text = new Text();
+        private int id;
+        private ImageView imageView;
 
         Tile(String value) {
             Rectangle border = new Rectangle(50, 60);
             border.setFill(null);
             border.setStroke(Color.BLACK);
 
-            text.setText(value);
-            text.setFont(Font.font(30));
+            if (value.equals("Bomb")) {
+                this.id = -1;
+                Image img = new Image("file:src/memory/img/bomb.png", 40, 40, false, false);
+                imageView = new ImageView(img);
+            } else {
+                this.id = Integer.parseInt(value);
+                Image img = new Image("https://pokeres.bastionbot.org/images/pokemon/" + value +  ".png", 40, 40, false, false);
+                imageView = new ImageView(img);
+            }
+            getChildren().addAll(border, imageView);
 
             setOnMouseClicked(this::handleMouseClick);
-
-            setAlignment(Pos.CENTER);
-            getChildren().addAll(border, text);
-
             closeOnStart();
         }
 
@@ -218,19 +227,16 @@ public class Main extends Application {
                 return;
             }
             clickCount--;
-            if (selected == null) {
+            if (selected == null && !isBomb()) {
                 selected = this;
-                open(() -> {
-                });
-            } else {
+                open(() -> {});
+            } else if (!isBomb()){
                 open(() -> {
                     if (!hasSameValue(selected)) {
                         selected.close();
                         this.close();
                         Manager.setNextPlayer();
                     } else {
-                        selected.text.setFill(Color.GREY);
-                        this.text.setFill(Color.GREY);
                         Manager.incrementScore();
                         System.out.println("game over : " + Manager.isGameOver());
                         if (Manager.isGameOver()) {
@@ -241,38 +247,50 @@ public class Main extends Application {
                     clickCount = 2;
                 });
             }
+            if (isBomb()) {
+                open(() -> {});
+                if (selected != null && !selected.isBomb()) selected.close();
+                Manager.decrementScore();
+                Manager.setNextPlayer();
+                selected = null;
+                clickCount = 2;
+            }
+        }
+
+        public boolean isBomb() {
+            return this.id == -1;
         }
 
         public boolean isOpen() {
-            return text.getOpacity() == 1;
+            return imageView.getOpacity() == 1;
         }
 
         public void open(Runnable action) {
-            FadeTransition ft = new FadeTransition(Duration.seconds(0.5), text);
+            FadeTransition ft = new FadeTransition(Duration.seconds(0.2), imageView);
             ft.setToValue(1);
             ft.setOnFinished(e -> action.run());
             ft.play();
-
         }
 
         public void close() {
-            FadeTransition ft = new FadeTransition(Duration.seconds(0.5), text);
+            FadeTransition ft = new FadeTransition(Duration.seconds(0.2), imageView);
             ft.setToValue(0);
             ft.play();
         }
 
         public void closeOnStart() {
-            FadeTransition ft = new FadeTransition(Duration.seconds(0.01), text);
+            FadeTransition ft = new FadeTransition(Duration.seconds(0.01), imageView);
             ft.setToValue(0);
             ft.play();
         }
 
         public boolean hasSameValue(Tile other) {
-            return text.getText().equals(other.text.getText());
+            System.out.println("this : " + this.id + " other : " + other.id);
+            return this.id == other.id;
         }
     }
 
-    public void setNumberPerRow(int nbPairs) {
+    public void setNumberPerRow() {
         NUMBER_PER_ROW = (int) Math.sqrt(NUMBER_OF_PAIRS * 2);
     }
 
