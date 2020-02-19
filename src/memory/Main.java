@@ -69,17 +69,16 @@ public class Main extends Application {
         grid.setHgap(5);
         grid.setAlignment(Pos.TOP_CENTER);
 
-        VBox playerBox = new VBox();
-        playerBox.setAlignment(Pos.TOP_RIGHT);
-        playerBox.setBorder(new Border(new BorderStroke(Color.LIGHTGREY, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(4))));
+        VBox boxPlayers = new VBox();
+        boxPlayers.setAlignment(Pos.TOP_RIGHT);
+        boxPlayers.setBorder(new Border(new BorderStroke(Color.LIGHTGREY, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(4))));
         for (int i = 0; i < manager.getNbPlayers(); i++) {
-            Label lab = setLabel(manager.getPlayers().get(i));
-            playerBox.getChildren().add(lab);
+            boxPlayers.getChildren().add(Manager.getPlayers().get(i).getBox());
         }
-        playerBox.setPadding(new Insets(15));
-        playerBox.setPrefWidth(100000);
+        boxPlayers.setPadding(new Insets(15));
+        boxPlayers.setPrefWidth(100000);
 
-        root.getChildren().addAll(playerBox, grid);
+        root.getChildren().addAll(boxPlayers, grid);
 
         return root;
     }
@@ -171,7 +170,10 @@ public class Main extends Application {
                         errorBox.getChildren().add(emptyPlayer);
                         return;
                     }
-                    players.add(new Player(labels.get(i).getText()));
+                    HBox playerBox = new HBox();
+                    Label playerLabel = new Label();
+                    playerBox.getChildren().add(playerLabel);
+                    players.add(new Player(labels.get(i).getText(), playerBox));
                 }
                 NUMBER_OF_PAIRS = Integer.valueOf(nbCardsChoice.getSelectionModel().selectedItemProperty().getValue().toString());
                 Manager manager = new Manager(players, NUMBER_OF_PAIRS);
@@ -268,10 +270,6 @@ public class Main extends Application {
         public boolean hasSameValue(Tile other) {
             return text.getText().equals(other.text.getText());
         }
-    }
-
-    public Label setLabel(Player player) {
-        return new Label(player.getName() + " score :" + player.getScore() + " rank : " + player.getRank());
     }
 
     public void setNumberPerRow(int nbPairs) {

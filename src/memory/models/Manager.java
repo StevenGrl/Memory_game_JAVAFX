@@ -1,5 +1,7 @@
 package memory.models;
 
+import javafx.scene.control.Label;
+
 import java.util.List;
 import java.util.Random;
 
@@ -52,7 +54,10 @@ public class Manager {
 
     public static void incrementScore() {
         Manager.getCurrentPlayer().setScore(Manager.getCurrentPlayer().getScore() + 1);
-        System.out.println(Manager.getCurrentPlayer().getName() + " : " + Manager.getCurrentPlayer().getScore());
+        Label lab = (Label) Manager.currentPlayer.getBox().getChildren().get(0);
+        lab.setText(Manager.currentPlayer.getLabel());
+        Manager.currentPlayer.getBox().getChildren().removeAll(Manager.currentPlayer.getBox().getChildren());
+        Manager.currentPlayer.getBox().getChildren().add(lab);
     }
 
     public static boolean isGameOver() {
