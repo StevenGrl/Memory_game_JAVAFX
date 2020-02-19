@@ -210,6 +210,9 @@ public class Main extends Application {
                         this.text.setFill(Color.GREY);
                         Manager.incrementScore();
                         System.out.println("game over : " + Manager.isGameOver());
+                        if (Manager.isGameOver()) {
+                            System.out.println("And the best player iiiiiiiiiiiiiiiiiis : " + Manager.getBestPlayer().getName());
+                        }
                     }
                     selected = null;
                     clickCount = 2;
