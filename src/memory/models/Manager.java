@@ -75,6 +75,14 @@ public class Manager {
         Manager.currentPlayer.getBox().getChildren().add(lab);
     }
 
+//    public static void rank() {
+//        Manager.getCurrentPlayer().setScore(Manager.getCurrentPlayer().getScore() + 1);
+//        Label lab = (Label) Manager.currentPlayer.getBox().getChildren().get(0);
+//        lab.setText(Manager.currentPlayer.getLabel());
+//        Manager.currentPlayer.getBox().getChildren().removeAll(Manager.currentPlayer.getBox().getChildren());
+//        Manager.currentPlayer.getBox().getChildren().add(lab);
+//    }
+
     public static boolean isGameOver() {
         int totalScore = 0;
         for (int i = 0; i < players.size(); i++) {
