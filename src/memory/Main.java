@@ -232,6 +232,7 @@ public class Main extends Application {
                         selected.text.setFill(Color.GREY);
                         this.text.setFill(Color.GREY);
                         Manager.incrementScore();
+//                        Manager.rank();
                         System.out.println("game over : " + Manager.isGameOver());
                         if (Manager.isGameOver()) {
                             System.out.println("And the best player iiiiiiiiiiiiiiiiiis : " + Manager.getBestPlayer().getName());

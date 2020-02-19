@@ -81,6 +81,7 @@ public class Player {
         this.box = box;
     }
 
+
     public void setBackground(Color color) {
         this.getBox().setBackground(new Background(new BackgroundFill(color, new CornerRadii(5), Insets.EMPTY)));
     }
