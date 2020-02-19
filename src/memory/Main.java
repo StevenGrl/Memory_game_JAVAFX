@@ -21,6 +21,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import memory.models.Manager;
@@ -51,6 +52,7 @@ public class Main extends Application {
         }
         Collections.shuffle(tiles);
 
+        GridPane grille = new GridPane();
         for (int i = 0; i < tiles.size(); i++) {
             Tile tile = tiles.get(i);
             tile.setTranslateX(50 * (i % NUMBER_PER_ROW));
@@ -61,11 +63,12 @@ public class Main extends Application {
             tile.setOnMouseExited((MouseEvent t) -> {
                 tile.setBackground(new Background(new BackgroundFill(Color.rgb(250, 250, 250), CornerRadii.EMPTY, Insets.EMPTY)));
             });
-            root.getChildren().add(tile);
+            //grille.setPadding(new Insets(15,15,15,15));
+            grille.getChildren().add(tile);
         }
 
-        HBox grille = new HBox();
-        grille.setPadding(new Insets(25));
+//
+        grille.setPadding(new Insets(15));
         root.getChildren().add(grille);
 
         VBox playerBox = new VBox();
@@ -74,9 +77,9 @@ public class Main extends Application {
             System.out.println(manager.getPlayers().get(i));
             Label lab = setLabel(manager.getPlayers().get(i));
             playerBox.getChildren().add(lab);
-            // utiliser la méthode setLabel
-            // mettre le label dans la box
         }
+        playerBox.setPadding(new Insets(15, 15, 15, 650));
+
 
         root.getChildren().add(playerBox);
 
