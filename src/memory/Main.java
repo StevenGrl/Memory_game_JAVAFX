@@ -73,7 +73,7 @@ public class Main extends Application {
 
         VBox playerBox = new VBox();
         playerBox.setAlignment(Pos.CENTER_RIGHT);
-        for (int i = 0; i < manager.getNbPlayers(); i++){
+        for (int i = 0; i < manager.getNbPlayers(); i++) {
             Label lab = setLabel(manager.getPlayers().get(i));
             playerBox.getChildren().add(lab);
         }
@@ -93,7 +93,7 @@ public class Main extends Application {
         VBox fieldsBox = new VBox();
         fieldsBox.setPadding(new Insets(20, 50, 20, 50));
         Label label = new Label("Joueur 1 :");
-        TextField textField = new TextField ();
+        TextField textField = new TextField();
         textField.setMaxWidth(150);
         labels.add(textField);
         fieldsBox.getChildren().addAll(label, textField);
@@ -110,7 +110,7 @@ public class Main extends Application {
             public void handle(ActionEvent event) {
                 if (nbPlayers < MAX_PLAYERS) {
                     Label labelPlayers = new Label("Joueur " + (nbPlayers + 1) + " :");
-                    TextField textField = new TextField ();
+                    TextField textField = new TextField();
                     textField.setMaxWidth(150);
                     labels.add(textField);
                     fieldsBox.getChildren().addAll(labelPlayers, textField);
@@ -129,7 +129,7 @@ public class Main extends Application {
 
         HBox nbCardsBox = new HBox();
         Label nbCardsLabel = new Label("Nombre de paires : ");
-        final ChoiceBox nbCardsChoice = new ChoiceBox(FXCollections.observableArrayList(    8, 21, 32, 40, 78));
+        final ChoiceBox nbCardsChoice = new ChoiceBox(FXCollections.observableArrayList(8, 21, 32, 40, 78));
         nbCardsChoice.setValue(8);
 
         nbCardsBox.getChildren().addAll(nbCardsLabel, nbCardsChoice);
@@ -198,7 +198,8 @@ public class Main extends Application {
             clickCount--;
             if (selected == null) {
                 selected = this;
-                open(() -> {});
+                open(() -> {
+                });
             } else {
                 open(() -> {
                     if (!hasSameValue(selected)) {
@@ -244,7 +245,7 @@ public class Main extends Application {
             ft.play();
         }
 
-            public boolean hasSameValue(Tile other) {
+        public boolean hasSameValue(Tile other) {
             return text.getText().equals(other.text.getText());
         }
     }
@@ -254,7 +255,7 @@ public class Main extends Application {
     }
 
     public void setNumberPerRow(int nbPairs) {
-        NUMBER_PER_ROW = (int) Math.sqrt(NUMBER_OF_PAIRS*2);
+        NUMBER_PER_ROW = (int) Math.sqrt(NUMBER_OF_PAIRS * 2);
     }
 
     @Override
