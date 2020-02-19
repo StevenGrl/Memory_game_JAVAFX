@@ -43,12 +43,12 @@ public class Main extends Application {
     private Parent createContent(Manager manager) {
         Pane root = new Pane();
         root.setPrefSize(800, 800);
-        char c = 'A';
+        int nb = 1;
         List<Tile> tiles = new ArrayList<>();
         for (int i = 0; i < NUMBER_OF_PAIRS; i++) {
-            tiles.add(new Tile(String.valueOf(c)));
-            tiles.add(new Tile(String.valueOf(c)));
-            c++;
+            tiles.add(new Tile(String.valueOf(nb)));
+            tiles.add(new Tile(String.valueOf(nb)));
+            nb++;
         }
         Collections.shuffle(tiles);
 
@@ -74,7 +74,6 @@ public class Main extends Application {
         VBox playerBox = new VBox();
         playerBox.setAlignment(Pos.CENTER_RIGHT);
         for (int i = 0; i < manager.getNbPlayers(); i++){
-            System.out.println(manager.getPlayers().get(i));
             Label lab = setLabel(manager.getPlayers().get(i));
             playerBox.getChildren().add(lab);
         }
@@ -154,8 +153,8 @@ public class Main extends Application {
                     }
                     players.add(new Player(labels.get(i).getText()));
                 }
-                Manager manager = new Manager(players);
                 NUMBER_OF_PAIRS = Integer.valueOf(nbCardsChoice.getSelectionModel().selectedItemProperty().getValue().toString());
+                Manager manager = new Manager(players, NUMBER_OF_PAIRS);
                 setNumberPerRow(NUMBER_OF_PAIRS);
                 primaryStage.setScene(new Scene(createContent(manager)));
             }
@@ -205,9 +204,12 @@ public class Main extends Application {
                     if (!hasSameValue(selected)) {
                         selected.close();
                         this.close();
+                        Manager.setNextPlayer();
                     } else {
                         selected.text.setFill(Color.GREY);
                         this.text.setFill(Color.GREY);
+                        Manager.incrementScore();
+                        System.out.println("game over : " + Manager.isGameOver());
                     }
                     selected = null;
                     clickCount = 2;
