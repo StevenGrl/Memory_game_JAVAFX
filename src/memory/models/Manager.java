@@ -3,6 +3,7 @@ package memory.models;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
 import java.util.List;
@@ -67,6 +68,9 @@ public class Manager {
 
     public static void incrementBomb() {
         currentPlayer.setNbBombe(currentPlayer.getNbBombe() + 1);
+        if (currentPlayer.getNbBombe() % 3 == 0) {
+            decrementScore();
+        }
         refreshLabel();
     }
 
@@ -86,6 +90,13 @@ public class Manager {
         lab.setText(Manager.currentPlayer.getLabel());
         Manager.currentPlayer.getBox().getChildren().removeAll(Manager.currentPlayer.getBox().getChildren());
         Manager.currentPlayer.getBox().getChildren().add(lab);
+        HBox bombsBox = new HBox();
+        for (int i = 0; i < currentPlayer.getNbBombe(); i++) {
+            Image img = new Image("file:src/memory/img/bomb.png", 10, 10, false, false);
+            ImageView imageView = new ImageView(img);
+            bombsBox.getChildren().add(imageView);
+        }
+        currentPlayer.getBox().getChildren().add(bombsBox);
     }
 
     public static void refreshAllLabel() {
@@ -94,14 +105,6 @@ public class Manager {
             lab.setText(Manager.getPlayers().get(i).getLabel());
             Manager.getPlayers().get(i).getBox().getChildren().removeAll(Manager.getPlayers().get(i).getBox().getChildren());
             Manager.getPlayers().get(i).getBox().getChildren().add(lab);
-            System.out.println("nb bombe : " + Manager.getPlayers().get(i).getNbBombe());
-            if (getPlayers().get(i).getNbBombe() > 0) {
-                for (int j = 0; j < getPlayers().get(i).getNbBombe(); j++) {
-                    Image img = new Image("file:src/memory/img/bomb.png", 10, 10, false, false);
-                    ImageView imageView = new ImageView(img);
-                    Manager.getPlayers().get(i).getBox().getChildren().add(imageView);
-                }
-            }
         }
     }
 
@@ -130,6 +133,7 @@ public class Manager {
     public static void resetScore() {
         for (int i = 0; i < getPlayers().size(); i++) {
             getPlayers().get(i).setScore(0);
+            getPlayers().get(i).setNbBombe(0);
             System.out.println(getPlayers().get(i).getScore());
         }
     }

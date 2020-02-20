@@ -292,7 +292,6 @@ public class Main extends Application {
             if (isBomb()) {
                 open(() -> {});
                 if (selected != null && !selected.isBomb()) selected.close();
-                Manager.decrementScore();
                 Manager.incrementBomb();
                 Manager.setNextPlayer();
                 selected = null;
