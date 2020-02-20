@@ -429,14 +429,14 @@ public class Main extends Application {
 
         public void close() {
             FadeTransition ft = new FadeTransition(Duration.seconds(0.3), imageView);
-            ft.setToValue(0.5);
+            ft.setToValue(0);
             ft.play();
             this.setBackground(new Background(new BackgroundFill(bgTile, CornerRadii.EMPTY, Insets.EMPTY)));
         }
 
         public void closeOnStart() {
             FadeTransition ft = new FadeTransition(Duration.seconds(0.01), imageView);
-            ft.setToValue(0.5);
+            ft.setToValue(0);
             ft.play();
         }
 
