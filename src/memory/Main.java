@@ -1,6 +1,7 @@
 package memory;
 
 import javafx.animation.FadeTransition;
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -36,6 +37,9 @@ public class Main extends Application {
     private static boolean isNbMaxPlayersReached = false;
     private static Button nextPlayer = new Button("Joueur suivant");
     private static Color bgTile;
+    private static String theme;
+    private static boolean isSwapActivated = false;
+    private static Tile[] tilesToSwap = new Tile[2];
 
     private Parent createContent(Stage primaryStage, Manager manager) {
         VBox root = new VBox();
@@ -90,6 +94,7 @@ public class Main extends Application {
         footer.setPadding(new Insets(5));
         footer.setSpacing(30);
         footer.setAlignment(Pos.BOTTOM_RIGHT);
+        Button swapButton = new Button("Échanger");
         Button replayButton = new Button("Recommencer");
         Button menuButton = new Button("Menu");
         if (nbPlayers > 1) {
@@ -102,9 +107,9 @@ public class Main extends Application {
                 }
             });
             nextPlayer.setDisable(true);
-            footer.getChildren().addAll(nextPlayer, replayButton, menuButton);
+            footer.getChildren().addAll(swapButton, nextPlayer, replayButton, menuButton);
         } else {
-            footer.getChildren().addAll(replayButton, menuButton);
+            footer.getChildren().addAll(swapButton, replayButton, menuButton);
         }
 
         menuButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -121,6 +126,15 @@ public class Main extends Application {
                 Manager.resetScore();
                 Manager.refreshAllLabel();
                 primaryStage.setScene(new Scene(createContent(primaryStage, manager)));
+            }
+        });
+
+        swapButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                if (clickCount == 2) {
+                    isSwapActivated = true;
+                }
             }
         });
 
@@ -228,8 +242,15 @@ public class Main extends Application {
 
         colorTileBox.getChildren().addAll(colorTileLabel, colorTileChoice);
 
-        paramsBox.getChildren().addAll(colorBox, colorTileBox);
+        HBox themeBox = new HBox();
+        Label themeLabel = new Label("Choisir un thème : ");
+        final ChoiceBox themeChoice = new ChoiceBox(FXCollections.observableArrayList("Pokemon", "Rick & Morty"));
+        themeChoice.setValue("Pokemon");
+        themeBox.setAlignment(Pos.CENTER);
 
+        themeBox.getChildren().addAll(themeLabel, themeChoice);
+
+        paramsBox.getChildren().addAll(colorBox, colorTileBox, themeBox);
 
         HBox submitBox = new HBox();
         Button submit = new Button("Lancer la partie");
@@ -263,7 +284,7 @@ public class Main extends Application {
                 if (colorChoice.getSelectionModel().getSelectedIndex() == 1) {
                     bgCurrent = Color.rgb(217, 136, 128);
                 } else if (colorChoice.getSelectionModel().getSelectedIndex() == 2) {
-                    bgCurrent = Color.rgb(247, 220, 111 );
+                    bgCurrent = Color.rgb(247, 220, 111);
                 } else if (colorChoice.getSelectionModel().getSelectedIndex() == 3) {
                     bgCurrent = Color.rgb(153, 163, 164);
                 }
@@ -272,9 +293,14 @@ public class Main extends Application {
                 if (colorTileChoice.getSelectionModel().getSelectedIndex() == 1) {
                     bgTile = Color.rgb(217, 136, 128);
                 } else if (colorTileChoice.getSelectionModel().getSelectedIndex() == 2) {
-                    bgTile = Color.rgb(247, 220, 111 );
+                    bgTile = Color.rgb(247, 220, 111);
                 } else if (colorTileChoice.getSelectionModel().getSelectedIndex() == 3) {
                     bgTile = Color.rgb(153, 163, 164);
+                }
+
+                theme = "Pokemon";
+                if (themeChoice.getSelectionModel().getSelectedIndex() == 1) {
+                    theme = "Rick & Morty";
                 }
 
                 Manager manager = new Manager(players, NUMBER_OF_PAIRS, isGameWithBombs, bgCurrent);
@@ -311,7 +337,8 @@ public class Main extends Application {
                 imageView = new ImageView(img);
             } else {
                 this.id = Integer.parseInt(value);
-                Image img = new Image("https://pokeres.bastionbot.org/images/pokemon/" + value +  ".png", 40, 40, false, false);
+                System.out.println(getUrl() + value + getExtension());
+                Image img = new Image(getUrl() + value + getExtension(), 40, 40, false, false);
                 imageView = new ImageView(img);
             }
             getChildren().addAll(border, imageView);
@@ -327,8 +354,9 @@ public class Main extends Application {
             clickCount--;
             if (selected == null && !isBomb()) {
                 selected = this;
-                open(() -> {});
-            } else if (!isBomb()){
+                open(() -> {
+                });
+            } else if (!isBomb()) {
                 open(() -> {
                     if (!hasSameValue(selected)) {
                         selected.close();
@@ -347,29 +375,41 @@ public class Main extends Application {
 
                             alert.show();
                         }
-//                    if (nbPlayers != 1) {
-//                        clickCount = 0;
-//                    } else {
+
                         clickCount = 2;
-//                    }
                     }
                     selected = null;
                 });
             }
             if (isBomb()) {
-                open(() -> {});
+                open(() -> {
+                });
                 if (selected != null && !selected.isBomb()) selected.close();
                 Manager.incrementBomb();
                 if (nbPlayers == 1) {
                     clickCount = 2;
                     Manager.setNextPlayer();
+                } else {
+                    clickCount = 0;
                 }
                 selected = null;
-                clickCount = 0;
             }
-            if (clickCount == 0) {
-                nextPlayer.setDisable(false);
-            }
+            PauseTransition wait = new PauseTransition(Duration.seconds(0.5));
+            wait.setOnFinished((e) -> {
+                if (clickCount == 0) {
+                    nextPlayer.setDisable(false);
+                }
+                wait.playFromStart();
+            });
+            wait.play();
+        }
+
+        public String getUrl() {
+            return theme.equals("Pokemon") ? "https://pokeres.bastionbot.org/images/pokemon/" : "https://rickandmortyapi.com/api/character/avatar/";
+        }
+
+        public String getExtension() {
+            return theme.equals("Pokemon") ? ".png" : ".jpeg";
         }
 
         public boolean isBomb() {
@@ -390,20 +430,31 @@ public class Main extends Application {
 
         public void close() {
             FadeTransition ft = new FadeTransition(Duration.seconds(0.3), imageView);
-            ft.setToValue(0);
+            ft.setToValue(0.5);
             ft.play();
             this.setBackground(new Background(new BackgroundFill(bgTile, CornerRadii.EMPTY, Insets.EMPTY)));
         }
 
         public void closeOnStart() {
             FadeTransition ft = new FadeTransition(Duration.seconds(0.01), imageView);
-            ft.setToValue(0);
+            ft.setToValue(0.5);
             ft.play();
         }
 
         public boolean hasSameValue(Tile other) {
             return this.id == other.id;
         }
+
+    }
+
+    public static void swapTile(Tile t1, Tile t2) {
+        Integer temp = GridPane.getRowIndex(t1);
+        GridPane.setRowIndex(t1, GridPane.getRowIndex(t2));
+        GridPane.setRowIndex(t2, temp);
+
+        temp = GridPane.getColumnIndex(t1);
+        GridPane.setColumnIndex(t1, GridPane.getColumnIndex(t2));
+        GridPane.setColumnIndex(t2, temp);
     }
 
     public void setNumberPerRow() {
