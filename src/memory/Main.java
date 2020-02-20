@@ -34,6 +34,7 @@ public class Main extends Application {
     private static int clickCount = 2;
     private static int nbPlayers = 1;
     private static boolean isNbMaxPlayersReached = false;
+    private static Color bgTile;
 
     private Parent createContent(Stage primaryStage, Manager manager) {
         VBox root = new VBox();
@@ -61,7 +62,7 @@ public class Main extends Application {
                 tile.setBackground(new Background(new BackgroundFill(Color.rgb(220, 220, 220), CornerRadii.EMPTY, Insets.EMPTY)));
             });
             tile.setOnMouseExited((MouseEvent t) -> {
-                tile.setBackground(new Background(new BackgroundFill(Color.rgb(250, 250, 250), CornerRadii.EMPTY, Insets.EMPTY)));
+                tile.setBackground(new Background(new BackgroundFill(bgTile, CornerRadii.EMPTY, Insets.EMPTY)));
             });
             grid.add(tile, (i % NUMBER_PER_ROW), (i / NUMBER_PER_ROW));
         }
@@ -190,6 +191,28 @@ public class Main extends Application {
         gameModeBox.setSpacing(10);
         gameModeBox.getChildren().addAll(gameModeLabel, gameModeChoice);
 
+
+        VBox paramsBox = new VBox();
+        paramsBox.setSpacing(10);
+        HBox colorBox = new HBox();
+        Label colorLabel = new Label("Couleur du joueur actif : ");
+        final ChoiceBox colorChoice = new ChoiceBox(FXCollections.observableArrayList("Bleu", "Rouge", "Jaune", "Gris"));
+        colorChoice.setValue("Bleu");
+        colorBox.setAlignment(Pos.CENTER);
+
+        colorBox.getChildren().addAll(colorLabel, colorChoice);
+
+        HBox colorTileBox = new HBox();
+        Label colorTileLabel = new Label("Couleur du dos de carte : ");
+        final ChoiceBox colorTileChoice = new ChoiceBox(FXCollections.observableArrayList("Bleu", "Rouge", "Jaune", "Gris"));
+        colorTileChoice.setValue("Bleu");
+        colorTileBox.setAlignment(Pos.CENTER);
+        
+        colorTileBox.getChildren().addAll(colorTileLabel, colorTileChoice);
+
+        paramsBox.getChildren().addAll(colorBox, colorTileBox);
+
+
         HBox submitBox = new HBox();
         Button submit = new Button("Lancer la partie");
         submit.setOnAction(new EventHandler<ActionEvent>() {
@@ -210,13 +233,33 @@ public class Main extends Application {
                     playerBox.getChildren().add(playerLabel);
                     players.add(new Player(labels.get(i).getText(), playerBox));
                 }
+
+                //Gestion parametre de partie
                 NUMBER_OF_PAIRS = Integer.valueOf(nbCardsChoice.getSelectionModel().selectedItemProperty().getValue().toString());
                 boolean isGameWithBombs = false;
                 if (gameModeChoice.getSelectionModel().getSelectedIndex() == 1) {
                     isGameWithBombs = true;
                 }
 
-                Manager manager = new Manager(players, NUMBER_OF_PAIRS, isGameWithBombs);
+                Color bgCurrent = Color.rgb(116, 208, 241);
+                if (colorChoice.getSelectionModel().getSelectedIndex() == 1) {
+                    bgCurrent = Color.rgb(217, 136, 128);
+                } else if (colorChoice.getSelectionModel().getSelectedIndex() == 2) {
+                    bgTile = Color.rgb(247, 220, 111 );
+                } else if (colorChoice.getSelectionModel().getSelectedIndex() == 2) {
+                    bgCurrent = Color.rgb(153, 163, 164);
+                }
+
+                bgTile = Color.rgb(133, 193, 233);
+                if (colorChoice.getSelectionModel().getSelectedIndex() == 1) {
+                    bgTile = Color.rgb(217, 136, 128);
+                } else if (colorChoice.getSelectionModel().getSelectedIndex() == 2) {
+                    bgTile = Color.rgb(247, 220, 111 );
+                } else if (colorChoice.getSelectionModel().getSelectedIndex() == 3) {
+                    bgTile = Color.rgb(153, 163, 164);
+                }
+
+                Manager manager = new Manager(players, NUMBER_OF_PAIRS, isGameWithBombs, bgCurrent);
                 setNumberPerRow();
                 primaryStage.setScene(new Scene(createContent(primaryStage, manager)));
             }
@@ -226,7 +269,7 @@ public class Main extends Application {
 
         VBox mainBox = new VBox();
         mainBox.setSpacing(20);
-        mainBox.getChildren().addAll(fieldsBox, buttonBox, nbCardsBox, gameModeBox, errorBox, submitBox);
+        mainBox.getChildren().addAll(fieldsBox, buttonBox, nbCardsBox, gameModeBox, paramsBox, errorBox, submitBox);
         mainBox.setAlignment(Pos.CENTER);
 
         root.getChildren().add(mainBox);
@@ -242,6 +285,7 @@ public class Main extends Application {
             Rectangle border = new Rectangle(50, 60);
             border.setFill(null);
             border.setStroke(Color.BLACK);
+            setBackground(new Background(new BackgroundFill(bgTile, CornerRadii.EMPTY, Insets.EMPTY)));
 
             if (value.equals("Bomb")) {
                 this.id = -1;
