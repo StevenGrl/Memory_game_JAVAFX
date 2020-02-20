@@ -67,7 +67,11 @@ public class Main extends Application {
                 tile.setBackground(new Background(new BackgroundFill(Color.rgb(220, 220, 220), CornerRadii.EMPTY, Insets.EMPTY)));
             });
             tile.setOnMouseExited((MouseEvent t) -> {
-                tile.setBackground(new Background(new BackgroundFill(bgTile, CornerRadii.EMPTY, Insets.EMPTY)));
+                if (!tile.isOpen()){
+                    tile.setBackground(new Background(new BackgroundFill(bgTile, CornerRadii.EMPTY, Insets.EMPTY)));
+                } else {
+                    tile.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+                }
             });
             grid.add(tile, (i % NUMBER_PER_ROW), (i / NUMBER_PER_ROW));
         }
@@ -370,6 +374,7 @@ public class Main extends Application {
 
                             alert.show();
                         }
+
                         clickCount = 2;
                     }
                     selected = null;
@@ -415,6 +420,7 @@ public class Main extends Application {
         }
 
         public void open(Runnable action) {
+            this.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
             FadeTransition ft = new FadeTransition(Duration.seconds(0.01), imageView);
             ft.setToValue(1);
             ft.setOnFinished(e -> action.run());
@@ -425,6 +431,7 @@ public class Main extends Application {
             FadeTransition ft = new FadeTransition(Duration.seconds(0.3), imageView);
             ft.setToValue(0.5);
             ft.play();
+            this.setBackground(new Background(new BackgroundFill(bgTile, CornerRadii.EMPTY, Insets.EMPTY)));
         }
 
         public void closeOnStart() {
