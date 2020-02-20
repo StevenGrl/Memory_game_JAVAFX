@@ -54,7 +54,6 @@ public class Manager {
     }
 
     public static void setNextPlayer() {
-        System.out.println("Previous player : " + Manager.getCurrentPlayer());
         currentPlayer.setBackground(bgNotCurrent);
         int nextPlayerIndex;
         nextPlayerIndex = getPlayers().indexOf(Manager.currentPlayer) + 1;
@@ -63,7 +62,6 @@ public class Manager {
         }
         Manager.currentPlayer = getPlayers().get(nextPlayerIndex);
         currentPlayer.setBackground(bgCurrent);
-        System.out.println("Next player : " + Manager.getCurrentPlayer());
     }
 
     public static void incrementBomb() {
