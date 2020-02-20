@@ -36,6 +36,7 @@ public class Main extends Application {
     private static int nbPlayers = 1;
     private static boolean isNbMaxPlayersReached = false;
     private static Button nextPlayer = new Button("Joueur suivant");
+    private static Button swapButton = new Button("Échanger");
     private static Color bgTile;
     private static String theme;
     private static boolean isSwapActivated = false;
@@ -67,7 +68,7 @@ public class Main extends Application {
                 tile.setBackground(new Background(new BackgroundFill(Color.rgb(220, 220, 220), CornerRadii.EMPTY, Insets.EMPTY)));
             });
             tile.setOnMouseExited((MouseEvent t) -> {
-                if (!tile.isOpen()){
+                if (!tile.isOpen()) {
                     tile.setBackground(new Background(new BackgroundFill(bgTile, CornerRadii.EMPTY, Insets.EMPTY)));
                 } else {
                     tile.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -94,7 +95,6 @@ public class Main extends Application {
         footer.setPadding(new Insets(5));
         footer.setSpacing(30);
         footer.setAlignment(Pos.BOTTOM_RIGHT);
-        Button swapButton = new Button("Échanger");
         Button replayButton = new Button("Recommencer");
         Button menuButton = new Button("Menu");
         if (nbPlayers > 1) {
@@ -104,6 +104,11 @@ public class Main extends Application {
                     clickCount = 2;
                     nextPlayer.setDisable(true);
                     Manager.setNextPlayer();
+                    if (Manager.getCurrentPlayer() == Manager.getWorstPlayer() && Manager.getBestPlayer().getScore() != 0) {
+                        swapButton.setDisable(false);
+                    } else {
+                        swapButton.setDisable(true);
+                    }
                 }
             });
             nextPlayer.setDisable(true);
@@ -129,6 +134,11 @@ public class Main extends Application {
             }
         });
 
+        if (Manager.getCurrentPlayer() == Manager.getWorstPlayer() && Manager.getBestPlayer().getScore() != 0) {
+            swapButton.setDisable(false);
+        } else {
+            swapButton.setDisable(true);
+        }
         swapButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -350,57 +360,49 @@ public class Main extends Application {
             if (isOpen() || clickCount == 0 || Manager.isGameOver()) {
                 return;
             }
-            clickCount--;
-            if (selected == null && !isBomb()) {
-                selected = this;
-                open(() -> {
-                });
-            } else if (!isBomb()) {
-                open(() -> {
-                    if (!hasSameValue(selected)) {
-                        selected.close();
-                        this.close();
-                        if (nbPlayers == 1) {
+            swapButton.setDisable(true);
+            if (isSwapActivated) {
+                getSwapTile(event);
+            } else {
+                clickCount--;
+                if (selected == null && !isBomb()) {
+                    selected = this;
+                    open(() -> {
+                    });
+                } else if (!isBomb()) {
+                    open(() -> {
+                        if (!hasSameValue(selected)) {
+                            selected.close();
+                            this.close();
+                            if (nbPlayers == 1) {
+                                clickCount = 2;
+                                Manager.setNextPlayer();
+                            }
+                        } else {
+                            Manager.incrementScore();
+                            if (Manager.isGameOver()) {
+                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                alert.setTitle("Fin de la partie");
+                                alert.setHeaderText("Nous avons un vainqueur !");
+                                alert.setContentText("Bravo " + Manager.getBestPlayer().getName() + " !");
+
+                                alert.show();
+                            }
                             clickCount = 2;
-                            Manager.setNextPlayer();
-                        }
-                    } else {
-                        Manager.incrementScore();
-                        if (Manager.isGameOver()) {
-                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                            alert.setTitle("Fin de la partie");
-                            alert.setHeaderText("Nous avons un vainqueur !");
-                            alert.setContentText("Bravo " + Manager.getBestPlayer().getName() + " !");
 
-                            alert.show();
                         }
-
-                        clickCount = 2;
+                        selected = null;
+                    });
+                }
+                PauseTransition wait = new PauseTransition(Duration.seconds(0.5));
+                wait.setOnFinished((e) -> {
+                    if (clickCount == 0) {
+                        nextPlayer.setDisable(false);
                     }
-                    selected = null;
+                    wait.playFromStart();
                 });
+                wait.play();
             }
-            if (isBomb()) {
-                open(() -> {
-                });
-                if (selected != null && !selected.isBomb()) selected.close();
-                Manager.incrementBomb();
-                if (nbPlayers == 1) {
-                    clickCount = 2;
-                    Manager.setNextPlayer();
-                } else {
-                    clickCount = 0;
-                }
-                selected = null;
-            }
-            PauseTransition wait = new PauseTransition(Duration.seconds(0.5));
-            wait.setOnFinished((e) -> {
-                if (clickCount == 0) {
-                    nextPlayer.setDisable(false);
-                }
-                wait.playFromStart();
-            });
-            wait.play();
         }
 
         public String getUrl() {
@@ -429,21 +431,46 @@ public class Main extends Application {
 
         public void close() {
             FadeTransition ft = new FadeTransition(Duration.seconds(0.3), imageView);
-            ft.setToValue(0);
+            ft.setToValue(0.4);
             ft.play();
             this.setBackground(new Background(new BackgroundFill(bgTile, CornerRadii.EMPTY, Insets.EMPTY)));
         }
 
         public void closeOnStart() {
             FadeTransition ft = new FadeTransition(Duration.seconds(0.01), imageView);
-            ft.setToValue(0);
+            ft.setToValue(0.4);
             ft.play();
         }
 
         public boolean hasSameValue(Tile other) {
             return this.id == other.id;
         }
+    }
 
+    public static void getSwapTile(MouseEvent event) {
+        if (clickCount == 2) {
+            tilesToSwap[0] = (Tile) event.getSource();
+            tilesToSwap[0].setBorder(new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+            clickCount--;
+            PauseTransition wait = new PauseTransition(Duration.seconds(0.5));
+            wait.setOnFinished((e) -> {
+                wait.playFromStart();
+            });
+            wait.play();
+        } else {
+            tilesToSwap[1] = (Tile) event.getSource();
+            tilesToSwap[1].setBorder(new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+            tilesToSwap[0].setBorder(Border.EMPTY);
+            tilesToSwap[1].setBorder(Border.EMPTY);
+            swapTile(tilesToSwap[0], tilesToSwap[1]);
+            clickCount = 2;
+            isSwapActivated = false;
+            PauseTransition wait = new PauseTransition(Duration.seconds(0.5));
+            wait.setOnFinished((e) -> {
+                wait.playFromStart();
+            });
+            wait.play();
+        }
     }
 
     public static void swapTile(Tile t1, Tile t2) {

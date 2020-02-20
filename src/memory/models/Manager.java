@@ -129,6 +129,16 @@ public class Manager {
         return bestPlayer;
     }
 
+    public static Player getWorstPlayer() {
+        Player worstPlayer = getPlayers().get(0);
+        for (int i = 1; i < getPlayers().size(); i++) {
+            if (getPlayers().get(i).getScore() < worstPlayer.getScore()) {
+                worstPlayer = getPlayers().get(i);
+            }
+        }
+        return worstPlayer;
+    }
+
     public static void resetScore() {
         for (int i = 0; i < getPlayers().size(); i++) {
             getPlayers().get(i).setScore(0);
