@@ -49,8 +49,10 @@ public class Main extends Application {
             nb++;
         }
 
-        for (int i = 0; i < NUMBER_PER_ROW; i++) {
-            tiles.add(new Tile("Bomb"));
+        if (Manager.isIsGameWithBombs()) {
+            for (int i = 0; i < NUMBER_PER_ROW; i++) {
+                tiles.add(new Tile("Bomb"));
+            }
         }
 
         Collections.shuffle(tiles);
@@ -182,6 +184,14 @@ public class Main extends Application {
         nbCardsBox.setAlignment(Pos.CENTER);
         nbCardsBox.setSpacing(10);
 
+        HBox gameModeBox = new HBox();
+        Label gameModeLabel = new Label("Mode de jeu : ");
+        final ChoiceBox gameModeChoice = new ChoiceBox(FXCollections.observableArrayList("Sans bombes", "Avec bombes"));
+        gameModeChoice.setValue("Sans bombes");
+        gameModeBox.setAlignment(Pos.CENTER);
+        gameModeBox.setSpacing(10);
+        gameModeBox.getChildren().addAll(gameModeLabel, gameModeChoice);
+
         HBox submitBox = new HBox();
         Button submit = new Button("Lancer la partie");
         submit.setOnAction(new EventHandler<ActionEvent>() {
@@ -203,7 +213,12 @@ public class Main extends Application {
                     players.add(new Player(labels.get(i).getText(), playerBox));
                 }
                 NUMBER_OF_PAIRS = Integer.valueOf(nbCardsChoice.getSelectionModel().selectedItemProperty().getValue().toString());
-                Manager manager = new Manager(players, NUMBER_OF_PAIRS);
+                boolean isGameWithBombs = false;
+                if (gameModeChoice.getSelectionModel().getSelectedIndex() == 1) {
+                    isGameWithBombs = true;
+                }
+
+                Manager manager = new Manager(players, NUMBER_OF_PAIRS, isGameWithBombs);
                 setNumberPerRow();
                 primaryStage.setScene(new Scene(createContent(primaryStage, manager)));
             }
@@ -213,7 +228,7 @@ public class Main extends Application {
 
         VBox mainBox = new VBox();
         mainBox.setSpacing(20);
-        mainBox.getChildren().addAll(fieldsBox, buttonBox, nbCardsBox, errorBox, submitBox);
+        mainBox.getChildren().addAll(fieldsBox, buttonBox, nbCardsBox, gameModeBox, errorBox, submitBox);
         mainBox.setAlignment(Pos.CENTER);
 
         root.getChildren().add(mainBox);

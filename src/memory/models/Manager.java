@@ -17,8 +17,10 @@ public class Manager {
     private static final Color bgNotCurrent = Color.WHITE;
     private static final Color bgCurrent = Color.rgb(116, 208, 241);
     private static int nbFinded = 0;
+    private static boolean isGameWithBombs;
 
-    public Manager(List<Player> players, int nbPairs) {
+    public Manager(List<Player> players, int nbPairs, boolean isGameWithBombs) {
+        setIsGameWithBombs(isGameWithBombs);
         Random rand = new Random(System.currentTimeMillis());
         this.setPlayers(players);
         this.setNbPlayers(players.size());
@@ -105,6 +107,14 @@ public class Manager {
 
     public static boolean isGameOver() {
         return nbFinded == nbPairs;
+    }
+
+    public static boolean isIsGameWithBombs() {
+        return isGameWithBombs;
+    }
+
+    public static void setIsGameWithBombs(boolean isGameWithBombs) {
+        Manager.isGameWithBombs = isGameWithBombs;
     }
 
     public static Player getBestPlayer() {
