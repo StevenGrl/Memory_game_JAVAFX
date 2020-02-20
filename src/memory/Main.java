@@ -333,7 +333,6 @@ public class Main extends Application {
                 imageView = new ImageView(img);
             } else {
                 this.id = Integer.parseInt(value);
-                System.out.println(getUrl() + value + getExtension());
                 Image img = new Image(getUrl() + value + getExtension(), 40, 40, false, false);
                 imageView = new ImageView(img);
             }
@@ -372,7 +371,6 @@ public class Main extends Application {
                             alert.show();
                         }
                         clickCount = 2;
-                        System.out.println("in has same value " + clickCount);
                     }
                     selected = null;
                 });
