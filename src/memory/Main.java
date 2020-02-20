@@ -409,6 +409,18 @@ public class Main extends Application {
                         selected = null;
                     });
                 }
+                if (isBomb()) {
+                    open(() -> {});
+                    if (selected != null && !selected.isBomb()) selected.close();
+                    Manager.incrementBomb();
+                    if (nbPlayers == 1) {
+                        clickCount = 2;
+                        Manager.setNextPlayer();
+                    } else {
+                        clickCount = 0;
+                    }
+                    selected = null;
+                }
                 PauseTransition wait = new PauseTransition(Duration.seconds(0.5));
                 wait.setOnFinished((e) -> {
                     if (clickCount == 0) {
