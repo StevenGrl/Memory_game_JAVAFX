@@ -166,6 +166,14 @@ public class Main extends Application {
         StackPane root = new StackPane();
         root.setPrefSize(800, 800);
 
+        //Joueurs
+        Label playerLabel = new Label("Choix des joueurs : ");
+        VBox playerBox = new VBox();
+        playerBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(2))));
+        playerBox.setSpacing(5);
+        playerBox.setAlignment(Pos.CENTER);
+        playerBox.setMaxWidth(400);
+        playerBox.setPadding(new Insets(15));
         VBox fieldsBox = new VBox();
         fieldsBox.setPadding(new Insets(20, 50, 20, 50));
         Label label = new Label("Joueur 1 :");
@@ -175,9 +183,8 @@ public class Main extends Application {
         fieldsBox.getChildren().addAll(label, textField);
         fieldsBox.setSpacing(10);
         fieldsBox.setAlignment(Pos.CENTER);
-        fieldsBox.setMaxWidth(400);
-        fieldsBox.setMinHeight(100);
-        fieldsBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(2))));
+
+
 
         VBox errorBox = new VBox();
         errorBox.setAlignment(Pos.CENTER);
@@ -206,7 +213,6 @@ public class Main extends Application {
             }
         });
 
-        fieldsBox.getChildren().addAll(buttonBox);
 
         Button removePlayerBtn = new Button("-");
         removePlayerBtn.setOnAction(new EventHandler<ActionEvent>() {
@@ -229,10 +235,14 @@ public class Main extends Application {
         buttonBox.getChildren().addAll(addPlayerBtn, removePlayerBtn);
         buttonBox.setSpacing(10);
 
+        playerBox.getChildren().addAll(fieldsBox, buttonBox);
+
+
         //Box niveau partie
         Label gameLabel = new Label("Niveau de difficulté : ");
         VBox gameBox = new VBox();
         gameBox.setMaxWidth(400);
+        playerBox.setPadding(new Insets(15));
         gameBox.setMinHeight(100);
         gameBox.setAlignment(Pos.CENTER);
         gameBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(2))));
@@ -353,7 +363,7 @@ public class Main extends Application {
 
         VBox mainBox = new VBox();
         mainBox.setSpacing(20);
-        mainBox.getChildren().addAll(fieldsBox, buttonBox, gameLabel, gameBox, paramsLabel, paramsBox, errorBox, submitBox, quitButton);
+        mainBox.getChildren().addAll(playerLabel, playerBox , gameLabel, gameBox, paramsLabel, paramsBox, errorBox, submitBox, quitButton);
         mainBox.setAlignment(Pos.CENTER);
 
         root.getChildren().add(mainBox);
