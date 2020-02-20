@@ -36,6 +36,7 @@ public class Main extends Application {
     private static boolean isNbMaxPlayersReached = false;
     private static Button nextPlayer = new Button("Joueur suivant");
     private static Color bgTile;
+    private static String theme;
 
     private Parent createContent(Stage primaryStage, Manager manager) {
         VBox root = new VBox();
@@ -224,8 +225,15 @@ public class Main extends Application {
         
         colorTileBox.getChildren().addAll(colorTileLabel, colorTileChoice);
 
-        paramsBox.getChildren().addAll(colorBox, colorTileBox);
+        HBox themeBox = new HBox();
+        Label themeLabel = new Label("Choisir un thème : ");
+        final ChoiceBox themeChoice = new ChoiceBox(FXCollections.observableArrayList("Pokemon", "Rick & Morty"));
+        themeChoice.setValue("Pokemon");
+        themeBox.setAlignment(Pos.CENTER);
 
+        themeBox.getChildren().addAll(themeLabel, themeChoice);
+
+        paramsBox.getChildren().addAll(colorBox, colorTileBox, themeBox);
 
         HBox submitBox = new HBox();
         Button submit = new Button("Lancer la partie");
@@ -273,6 +281,11 @@ public class Main extends Application {
                     bgTile = Color.rgb(153, 163, 164);
                 }
 
+                theme = "Pokemon";
+                if (themeChoice.getSelectionModel().getSelectedIndex() == 1) {
+                    theme = "Rick & Morty";
+                }
+
                 Manager manager = new Manager(players, NUMBER_OF_PAIRS, isGameWithBombs, bgCurrent);
                 setNumberPerRow();
                 primaryStage.setScene(new Scene(createContent(primaryStage, manager)));
@@ -307,7 +320,8 @@ public class Main extends Application {
                 imageView = new ImageView(img);
             } else {
                 this.id = Integer.parseInt(value);
-                Image img = new Image("https://pokeres.bastionbot.org/images/pokemon/" + value +  ".png", 40, 40, false, false);
+                System.out.println(getUrl() + value + getExtension());
+                Image img = new Image(getUrl() + value + getExtension(), 40, 40, false, false);
                 imageView = new ImageView(img);
             }
             getChildren().addAll(border, imageView);
@@ -359,13 +373,22 @@ public class Main extends Application {
                 if (nbPlayers == 1) {
                     clickCount = 2;
                     Manager.setNextPlayer();
+                } else {
+                    clickCount = 0;
                 }
                 selected = null;
-                clickCount = 0;
             }
             if (clickCount == 0) {
                 nextPlayer.setDisable(false);
             }
+        }
+
+        public String getUrl() {
+            return theme.equals("Pokemon") ? "https://pokeres.bastionbot.org/images/pokemon/" : "https://rickandmortyapi.com/api/character/avatar/";
+        }
+
+        public String getExtension() {
+            return theme.equals("Pokemon") ? ".png" : ".jpeg";
         }
 
         public boolean isBomb() {
@@ -385,13 +408,13 @@ public class Main extends Application {
 
         public void close() {
             FadeTransition ft = new FadeTransition(Duration.seconds(0.3), imageView);
-            ft.setToValue(0);
+            ft.setToValue(0.5);
             ft.play();
         }
 
         public void closeOnStart() {
             FadeTransition ft = new FadeTransition(Duration.seconds(0.01), imageView);
-            ft.setToValue(0);
+            ft.setToValue(0.5);
             ft.play();
         }
 
