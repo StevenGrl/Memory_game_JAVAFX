@@ -347,13 +347,13 @@ public class Main extends Application {
 
                             alert.show();
                         }
+//                    if (nbPlayers != 1) {
+//                        clickCount = 0;
+//                    } else {
+                        clickCount = 2;
+//                    }
                     }
                     selected = null;
-                    if (nbPlayers != 1) {
-                        clickCount = 0;
-                    } else {
-                        clickCount = 2;
-                    }
                 });
             }
             if (isBomb()) {
