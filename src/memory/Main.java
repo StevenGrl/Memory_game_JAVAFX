@@ -36,7 +36,12 @@ public class Main extends Application {
     private static boolean isNbMaxPlayersReached = false;
     private static Button nextPlayer = new Button("Joueur suivant");
     private static Color bgTile;
+<<<<<<< Updated upstream
     private static String theme;
+=======
+    private static boolean isSwapActivated = false;
+    private static Tile[] tilesToSwap = new Tile[2];
+>>>>>>> Stashed changes
 
     private Parent createContent(Stage primaryStage, Manager manager) {
         VBox root = new VBox();
@@ -87,8 +92,10 @@ public class Main extends Application {
         footer.setPadding(new Insets(5));
         footer.setSpacing(30);
         footer.setAlignment(Pos.BOTTOM_RIGHT);
+        Button swapButton = new Button("Échanger");
         Button replayButton = new Button("Recommencer");
         Button menuButton = new Button("Menu");
+<<<<<<< Updated upstream
         if (nbPlayers > 1) {
             nextPlayer.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
@@ -103,6 +110,9 @@ public class Main extends Application {
         } else {
             footer.getChildren().addAll(replayButton, menuButton);
         }
+=======
+        footer.getChildren().addAll(swapButton, replayButton, menuButton);
+>>>>>>> Stashed changes
 
         menuButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -118,6 +128,15 @@ public class Main extends Application {
                 Manager.resetScore();
                 Manager.refreshAllLabel();
                 primaryStage.setScene(new Scene(createContent(primaryStage, manager)));
+            }
+        });
+
+        swapButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                if (clickCount == 2) {
+                    isSwapActivated = true;
+                }
             }
         });
 
@@ -331,6 +350,7 @@ public class Main extends Application {
         }
 
         public void handleMouseClick(MouseEvent event) {
+<<<<<<< Updated upstream
             if (isOpen() || clickCount == 0 || Manager.isGameOver()) {
                 return;
             }
@@ -356,9 +376,62 @@ public class Main extends Application {
                             alert.setContentText("Bravo " + Manager.getBestPlayer().getName() + " !");
 
                             alert.show();
+=======
+            if (isOpen() || clickCount == 0) {
+                return;
+            }
+            if (isSwapActivated) {
+                if (clickCount == 2) {
+                    tilesToSwap[0] = (Tile) event.getSource();
+                    tilesToSwap[0].setBorder(new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+                    clickCount--;
+                } else {
+                    tilesToSwap[1] = (Tile) event.getSource();
+                    tilesToSwap[1].setBorder(new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+                    tilesToSwap[0].setBorder(Border.EMPTY);
+                    tilesToSwap[1].setBorder(Border.EMPTY);
+                    swapTile(tilesToSwap[0], tilesToSwap[1]);
+                    clickCount = 2;
+                    isSwapActivated = false;
+                }
+            } else {
+                clickCount--;
+                if (selected == null && !isBomb()) {
+                    selected = this;
+                    open(() -> {
+                    });
+                } else if (!isBomb()) {
+                    open(() -> {
+                        if (!hasSameValue(selected)) {
+                            selected.close();
+                            this.close();
+                            Manager.setNextPlayer();
+                        } else {
+                            Manager.incrementScore();
+                            System.out.println("game over : " + Manager.isGameOver());
+                            if (Manager.isGameOver()) {
+                                System.out.println("And the best player iiiiiiiiiiiiiiiiiis : " + Manager.getBestPlayer().getName());
+                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                alert.setTitle("Fin de la partie");
+                                alert.setHeaderText("Nous avons un vainqueur !");
+                                alert.setContentText("Bravo " + Manager.getBestPlayer().getName() + " !");
+
+                                alert.show();
+                            }
+>>>>>>> Stashed changes
                         }
-                    }
+                        selected = null;
+                        clickCount = 2;
+                    });
+                }
+                if (isBomb()) {
+                    open(() -> {
+                    });
+                    if (selected != null && !selected.isBomb()) selected.close();
+                    Manager.incrementBomb();
+                    Manager.setNextPlayer();
                     selected = null;
+<<<<<<< Updated upstream
                     if (nbPlayers != 1) {
                         clickCount = 0;
                     } else {
@@ -377,6 +450,10 @@ public class Main extends Application {
                     clickCount = 0;
                 }
                 selected = null;
+=======
+                    clickCount = 2;
+                }
+>>>>>>> Stashed changes
             }
             if (clickCount == 0) {
                 nextPlayer.setDisable(false);
@@ -421,6 +498,16 @@ public class Main extends Application {
         public boolean hasSameValue(Tile other) {
             return this.id == other.id;
         }
+    }
+
+    public static void swapTile(Tile t1, Tile t2) {
+        Integer temp = GridPane.getRowIndex(t1);
+        GridPane.setRowIndex(t1, GridPane.getRowIndex(t2));
+        GridPane.setRowIndex(t2, temp);
+
+        temp = GridPane.getColumnIndex(t1);
+        GridPane.setColumnIndex(t1, GridPane.getColumnIndex(t2));
+        GridPane.setColumnIndex(t2, temp);
     }
 
     public void setNumberPerRow() {
