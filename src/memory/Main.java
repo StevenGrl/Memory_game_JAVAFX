@@ -36,12 +36,9 @@ public class Main extends Application {
     private static boolean isNbMaxPlayersReached = false;
     private static Button nextPlayer = new Button("Joueur suivant");
     private static Color bgTile;
-<<<<<<< Updated upstream
     private static String theme;
-=======
     private static boolean isSwapActivated = false;
     private static Tile[] tilesToSwap = new Tile[2];
->>>>>>> Stashed changes
 
     private Parent createContent(Stage primaryStage, Manager manager) {
         VBox root = new VBox();
@@ -95,7 +92,6 @@ public class Main extends Application {
         Button swapButton = new Button("Échanger");
         Button replayButton = new Button("Recommencer");
         Button menuButton = new Button("Menu");
-<<<<<<< Updated upstream
         if (nbPlayers > 1) {
             nextPlayer.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
@@ -106,13 +102,10 @@ public class Main extends Application {
                 }
             });
             nextPlayer.setDisable(true);
-            footer.getChildren().addAll(nextPlayer, replayButton, menuButton);
+            footer.getChildren().addAll(swapButton, nextPlayer, replayButton, menuButton);
         } else {
-            footer.getChildren().addAll(replayButton, menuButton);
+            footer.getChildren().addAll(swapButton, replayButton, menuButton);
         }
-=======
-        footer.getChildren().addAll(swapButton, replayButton, menuButton);
->>>>>>> Stashed changes
 
         menuButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
