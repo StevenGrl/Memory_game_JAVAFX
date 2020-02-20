@@ -37,6 +37,7 @@ public class Main extends Application {
     private static boolean isNbMaxPlayersReached = false;
     private static Button nextPlayer = new Button("Joueur suivant");
     private static Button swapButton = new Button("Échanger");
+    private static Button quitButton = new Button("Quitter");
     private static Color bgTile;
     private static String theme;
     private static boolean isSwapActivated = false;
@@ -112,9 +113,9 @@ public class Main extends Application {
                 }
             });
             nextPlayer.setDisable(true);
-            footer.getChildren().addAll(swapButton, nextPlayer, replayButton, menuButton);
+            footer.getChildren().addAll(swapButton, nextPlayer, replayButton, menuButton, quitButton);
         } else {
-            footer.getChildren().addAll(swapButton, replayButton, menuButton);
+            footer.getChildren().addAll(swapButton, replayButton, menuButton, quitButton);
         }
 
         menuButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -149,6 +150,13 @@ public class Main extends Application {
         });
 
         root.getChildren().addAll(boxPlayers, grid, footer);
+
+        quitButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.exit(0);
+            }
+        });
 
         return root;
     }
@@ -323,10 +331,17 @@ public class Main extends Application {
 
         VBox mainBox = new VBox();
         mainBox.setSpacing(20);
-        mainBox.getChildren().addAll(fieldsBox, buttonBox, nbCardsBox, gameModeBox, paramsBox, errorBox, submitBox);
+        mainBox.getChildren().addAll(fieldsBox, buttonBox, nbCardsBox, gameModeBox, paramsBox, errorBox, submitBox, quitButton);
         mainBox.setAlignment(Pos.CENTER);
 
         root.getChildren().add(mainBox);
+
+        quitButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.exit(0);
+            }
+        });
 
         return root;
     }
