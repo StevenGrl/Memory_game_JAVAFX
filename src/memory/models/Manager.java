@@ -1,6 +1,8 @@
 package memory.models;
 
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
 import java.util.List;
@@ -61,6 +63,11 @@ public class Manager {
         System.out.println("Next player : " + Manager.getCurrentPlayer());
     }
 
+    public static void incrementBomb() {
+        currentPlayer.setNbBombe(currentPlayer.getNbBombe() + 1);
+        refreshLabel();
+    }
+
     public static void incrementScore() {
         currentPlayer.setScore(currentPlayer.getScore() + 1);
         nbFinded++;
@@ -85,6 +92,14 @@ public class Manager {
             lab.setText(Manager.getPlayers().get(i).getLabel());
             Manager.getPlayers().get(i).getBox().getChildren().removeAll(Manager.getPlayers().get(i).getBox().getChildren());
             Manager.getPlayers().get(i).getBox().getChildren().add(lab);
+            System.out.println("nb bombe : " + Manager.getPlayers().get(i).getNbBombe());
+            if (getPlayers().get(i).getNbBombe() > 0) {
+                for (int j = 0; j < getPlayers().get(i).getNbBombe(); j++) {
+                    Image img = new Image("file:src/memory/img/bomb.png", 10, 10, false, false);
+                    ImageView imageView = new ImageView(img);
+                    Manager.getPlayers().get(i).getBox().getChildren().add(imageView);
+                }
+            }
         }
     }
 

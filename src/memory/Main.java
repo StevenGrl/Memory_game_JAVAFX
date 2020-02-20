@@ -278,6 +278,7 @@ public class Main extends Application {
                 open(() -> {});
                 if (selected != null && !selected.isBomb()) selected.close();
                 Manager.decrementScore();
+                Manager.incrementBomb();
                 Manager.setNextPlayer();
                 selected = null;
                 clickCount = 2;
