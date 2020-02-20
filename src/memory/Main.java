@@ -34,6 +34,7 @@ public class Main extends Application {
     private static int clickCount = 2;
     private static int nbPlayers = 1;
     private static boolean isNbMaxPlayersReached = false;
+    private static Button nextPlayer = new Button("Joueur suivant");
     private static Color bgTile;
 
     private Parent createContent(Stage primaryStage, Manager manager) {
@@ -83,11 +84,24 @@ public class Main extends Application {
 
         HBox footer = new HBox();
         footer.setPadding(new Insets(5));
-        footer.setSpacing(5);
+        footer.setSpacing(30);
         footer.setAlignment(Pos.BOTTOM_RIGHT);
         Button replayButton = new Button("Recommencer");
         Button menuButton = new Button("Menu");
-        footer.getChildren().addAll(replayButton, menuButton);
+        if (nbPlayers > 1) {
+            nextPlayer.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    clickCount = 2;
+                    nextPlayer.setDisable(true);
+                    Manager.setNextPlayer();
+                }
+            });
+            nextPlayer.setDisable(true);
+            footer.getChildren().addAll(nextPlayer, replayButton, menuButton);
+        } else {
+            footer.getChildren().addAll(replayButton, menuButton);
+        }
 
         menuButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -303,11 +317,7 @@ public class Main extends Application {
         }
 
         public void handleMouseClick(MouseEvent event) {
-            if (Manager.isGameOver()) {
-                System.out.println("And the best player iiiiiiiiiiiiiiiiiis : " + Manager.getBestPlayer().getName());
-                return;
-            }
-            if (isOpen() || clickCount == 0) {
+            if (isOpen() || clickCount == 0 || Manager.isGameOver()) {
                 return;
             }
             clickCount--;
@@ -319,12 +329,13 @@ public class Main extends Application {
                     if (!hasSameValue(selected)) {
                         selected.close();
                         this.close();
-                        Manager.setNextPlayer();
+                        if (nbPlayers == 1) {
+                            clickCount = 2;
+                            Manager.setNextPlayer();
+                        }
                     } else {
                         Manager.incrementScore();
-                        System.out.println("game over : " + Manager.isGameOver());
                         if (Manager.isGameOver()) {
-                            System.out.println("And the best player iiiiiiiiiiiiiiiiiis : " + Manager.getBestPlayer().getName());
                             Alert alert = new Alert(Alert.AlertType.INFORMATION);
                             alert.setTitle("Fin de la partie");
                             alert.setHeaderText("Nous avons un vainqueur !");
@@ -334,16 +345,26 @@ public class Main extends Application {
                         }
                     }
                     selected = null;
-                    clickCount = 2;
+                    if (nbPlayers != 1) {
+                        clickCount = 0;
+                    } else {
+                        clickCount = 2;
+                    }
                 });
             }
             if (isBomb()) {
                 open(() -> {});
                 if (selected != null && !selected.isBomb()) selected.close();
                 Manager.incrementBomb();
-                Manager.setNextPlayer();
+                if (nbPlayers == 1) {
+                    clickCount = 2;
+                    Manager.setNextPlayer();
+                }
                 selected = null;
-                clickCount = 2;
+                clickCount = 0;
+            }
+            if (clickCount == 0) {
+                nextPlayer.setDisable(false);
             }
         }
 
@@ -375,7 +396,6 @@ public class Main extends Application {
         }
 
         public boolean hasSameValue(Tile other) {
-            System.out.println("this : " + this.id + " other : " + other.id);
             return this.id == other.id;
         }
     }
