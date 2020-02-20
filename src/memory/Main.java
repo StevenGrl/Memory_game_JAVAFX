@@ -175,6 +175,9 @@ public class Main extends Application {
         fieldsBox.getChildren().addAll(label, textField);
         fieldsBox.setSpacing(10);
         fieldsBox.setAlignment(Pos.CENTER);
+        fieldsBox.setMaxWidth(400);
+        fieldsBox.setMinHeight(100);
+        fieldsBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(2))));
 
         VBox errorBox = new VBox();
         errorBox.setAlignment(Pos.CENTER);
@@ -203,6 +206,8 @@ public class Main extends Application {
             }
         });
 
+        fieldsBox.getChildren().addAll(buttonBox);
+
         Button removePlayerBtn = new Button("-");
         removePlayerBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -224,6 +229,15 @@ public class Main extends Application {
         buttonBox.getChildren().addAll(addPlayerBtn, removePlayerBtn);
         buttonBox.setSpacing(10);
 
+        //Box niveau partie
+        Label gameLabel = new Label("Niveau de difficulté : ");
+        VBox gameBox = new VBox();
+        gameBox.setMaxWidth(400);
+        gameBox.setMinHeight(100);
+        gameBox.setAlignment(Pos.CENTER);
+        gameBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(2))));
+        gameBox.setSpacing(10);
+
         HBox nbCardsBox = new HBox();
         Label nbCardsLabel = new Label("Nombre de paires : ");
         final ChoiceBox nbCardsChoice = new ChoiceBox(FXCollections.observableArrayList(8, 21, 32, 40));
@@ -233,6 +247,7 @@ public class Main extends Application {
         nbCardsBox.setAlignment(Pos.CENTER);
         nbCardsBox.setSpacing(10);
 
+
         HBox gameModeBox = new HBox();
         Label gameModeLabel = new Label("Mode de jeu : ");
         final ChoiceBox gameModeChoice = new ChoiceBox(FXCollections.observableArrayList("Sans bombes", "Avec bombes"));
@@ -241,8 +256,15 @@ public class Main extends Application {
         gameModeBox.setSpacing(10);
         gameModeBox.getChildren().addAll(gameModeLabel, gameModeChoice);
 
+        gameBox.getChildren().addAll(nbCardsBox, gameModeBox);
 
+        //Box Parametres
+        Label paramsLabel = new Label("Paramètres : (facultatif)");
         VBox paramsBox = new VBox();
+        paramsBox.setMaxWidth(400);
+        paramsBox.setMinHeight(150);
+        paramsBox.setAlignment(Pos.CENTER);
+        paramsBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(2))));
         paramsBox.setSpacing(10);
         HBox colorBox = new HBox();
         Label colorLabel = new Label("Couleur du joueur actif : ");
@@ -331,7 +353,7 @@ public class Main extends Application {
 
         VBox mainBox = new VBox();
         mainBox.setSpacing(20);
-        mainBox.getChildren().addAll(fieldsBox, buttonBox, nbCardsBox, gameModeBox, paramsBox, errorBox, submitBox, quitButton);
+        mainBox.getChildren().addAll(fieldsBox, buttonBox, gameLabel, gameBox, paramsLabel, paramsBox, errorBox, submitBox, quitButton);
         mainBox.setAlignment(Pos.CENTER);
 
         root.getChildren().add(mainBox);
