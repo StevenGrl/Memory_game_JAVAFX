@@ -76,7 +76,7 @@ public class Main extends Application {
 
         HBox boxPlayers = new HBox();
         boxPlayers.setAlignment(Pos.TOP_CENTER);
-        boxPlayers.setBorder(new Border(new BorderStroke(Color.LIGHTGREY, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(4))));
+        boxPlayers.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(2))));
         for (int i = 0; i < manager.getNbPlayers(); i++) {
             boxPlayers.getChildren().add(Manager.getPlayers().get(i).getBox());
         }
@@ -222,7 +222,7 @@ public class Main extends Application {
         final ChoiceBox colorTileChoice = new ChoiceBox(FXCollections.observableArrayList("Bleu", "Rouge", "Jaune", "Gris"));
         colorTileChoice.setValue("Bleu");
         colorTileBox.setAlignment(Pos.CENTER);
-        
+
         colorTileBox.getChildren().addAll(colorTileLabel, colorTileChoice);
 
         HBox themeBox = new HBox();
@@ -267,17 +267,17 @@ public class Main extends Application {
                 if (colorChoice.getSelectionModel().getSelectedIndex() == 1) {
                     bgCurrent = Color.rgb(217, 136, 128);
                 } else if (colorChoice.getSelectionModel().getSelectedIndex() == 2) {
-                    bgTile = Color.rgb(247, 220, 111 );
-                } else if (colorChoice.getSelectionModel().getSelectedIndex() == 2) {
+                    bgCurrent = Color.rgb(247, 220, 111 );
+                } else if (colorChoice.getSelectionModel().getSelectedIndex() == 3) {
                     bgCurrent = Color.rgb(153, 163, 164);
                 }
 
                 bgTile = Color.rgb(133, 193, 233);
-                if (colorChoice.getSelectionModel().getSelectedIndex() == 1) {
+                if (colorTileChoice.getSelectionModel().getSelectedIndex() == 1) {
                     bgTile = Color.rgb(217, 136, 128);
-                } else if (colorChoice.getSelectionModel().getSelectedIndex() == 2) {
+                } else if (colorTileChoice.getSelectionModel().getSelectedIndex() == 2) {
                     bgTile = Color.rgb(247, 220, 111 );
-                } else if (colorChoice.getSelectionModel().getSelectedIndex() == 3) {
+                } else if (colorTileChoice.getSelectionModel().getSelectedIndex() == 3) {
                     bgTile = Color.rgb(153, 163, 164);
                 }
 

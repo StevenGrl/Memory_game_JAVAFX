@@ -77,6 +77,7 @@ public class Player {
         box.getChildren().add(label);
         box.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(1))));
         box.setPadding(new Insets(3));
+        box.setMinHeight(55);
         this.box = box;
     }
 
