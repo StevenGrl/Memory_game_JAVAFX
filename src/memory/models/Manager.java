@@ -15,17 +15,18 @@ public class Manager {
     private static int nbPlayers;
     private static Player currentPlayer;
     private static int nbPairs;
-    private static final Color bgNotCurrent = Color.WHITE;
-    private static final Color bgCurrent = Color.rgb(116, 208, 241);
+    private static Color bgNotCurrent = Color.WHITE;
+    private static Color bgCurrent;
     private static int nbFinded = 0;
     private static boolean isGameWithBombs;
 
-    public Manager(List<Player> players, int nbPairs, boolean isGameWithBombs) {
+    public Manager(List<Player> players, int nbPairs, boolean isGameWithBombs, Color bgCur) {
         setIsGameWithBombs(isGameWithBombs);
         Random rand = new Random(System.currentTimeMillis());
         this.setPlayers(players);
         this.setNbPlayers(players.size());
         Manager.currentPlayer = getPlayers().get(rand.nextInt(getPlayers().size()));
+        bgCurrent = bgCur;
         currentPlayer.setBackground(bgCurrent);
         Manager.nbPairs = nbPairs;
 
