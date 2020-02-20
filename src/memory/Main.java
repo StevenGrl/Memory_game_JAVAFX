@@ -1,6 +1,7 @@
 package memory;
 
 import javafx.animation.FadeTransition;
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -357,13 +358,10 @@ public class Main extends Application {
 
                             alert.show();
                         }
+                        clickCount = 2;
+                        System.out.println("in has same value " + clickCount);
                     }
                     selected = null;
-                    if (nbPlayers != 1) {
-                        clickCount = 0;
-                    } else {
-                        clickCount = 2;
-                    }
                 });
             }
             if (isBomb()) {
@@ -378,9 +376,15 @@ public class Main extends Application {
                 }
                 selected = null;
             }
-            if (clickCount == 0) {
-                nextPlayer.setDisable(false);
-            }
+            PauseTransition wait = new PauseTransition(Duration.seconds(0.5));
+            wait.setOnFinished((e) -> {
+                if (clickCount == 0) {
+                    nextPlayer.setDisable(false);
+                }
+                wait.playFromStart();
+            });
+            wait.play();
+
         }
 
         public String getUrl() {
