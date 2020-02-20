@@ -1,6 +1,7 @@
 package memory;
 
 import javafx.animation.FadeTransition;
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -279,7 +280,7 @@ public class Main extends Application {
                 if (colorChoice.getSelectionModel().getSelectedIndex() == 1) {
                     bgCurrent = Color.rgb(217, 136, 128);
                 } else if (colorChoice.getSelectionModel().getSelectedIndex() == 2) {
-                    bgCurrent = Color.rgb(247, 220, 111 );
+                    bgCurrent = Color.rgb(247, 220, 111);
                 } else if (colorChoice.getSelectionModel().getSelectedIndex() == 3) {
                     bgCurrent = Color.rgb(153, 163, 164);
                 }
@@ -288,7 +289,7 @@ public class Main extends Application {
                 if (colorTileChoice.getSelectionModel().getSelectedIndex() == 1) {
                     bgTile = Color.rgb(217, 136, 128);
                 } else if (colorTileChoice.getSelectionModel().getSelectedIndex() == 2) {
-                    bgTile = Color.rgb(247, 220, 111 );
+                    bgTile = Color.rgb(247, 220, 111);
                 } else if (colorTileChoice.getSelectionModel().getSelectedIndex() == 3) {
                     bgTile = Color.rgb(153, 163, 164);
                 }
@@ -346,65 +347,57 @@ public class Main extends Application {
             if (isOpen() || clickCount == 0 || Manager.isGameOver()) {
                 return;
             }
-            if (isSwapActivated) {
-                if (clickCount == 2) {
-                    tilesToSwap[0] = (Tile) event.getSource();
-                    tilesToSwap[0].setBorder(new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-                    clickCount--;
-                } else {
-                    tilesToSwap[1] = (Tile) event.getSource();
-                    tilesToSwap[1].setBorder(new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-                    tilesToSwap[0].setBorder(Border.EMPTY);
-                    tilesToSwap[1].setBorder(Border.EMPTY);
-                    swapTile(tilesToSwap[0], tilesToSwap[1]);
-                    clickCount = 2;
-                    isSwapActivated = false;
-                }
-            } else {
-                clickCount--;
-                if (selected == null && !isBomb()) {
-                    selected = this;
-                    open(() -> {});
-                } else if (!isBomb()){
-                    open(() -> {
-                        if (!hasSameValue(selected)) {
-                            selected.close();
-                            this.close();
-                            if (nbPlayers == 1) {
-                                clickCount = 2;
-                                Manager.setNextPlayer();
-                            }
-                        } else {
-                            Manager.incrementScore();
-                            if (Manager.isGameOver()) {
-                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                                alert.setTitle("Fin de la partie");
-                                alert.setHeaderText("Nous avons un vainqueur !");
-                                alert.setContentText("Bravo " + Manager.getBestPlayer().getName() + " !");
-
-                                alert.show();
-                            }
-                            selected = null;
+            clickCount--;
+            if (selected == null && !isBomb()) {
+                selected = this;
+                open(() -> {
+                });
+            } else if (!isBomb()) {
+                open(() -> {
+                    if (!hasSameValue(selected)) {
+                        selected.close();
+                        this.close();
+                        if (nbPlayers == 1) {
                             clickCount = 2;
+                            Manager.setNextPlayer();
                         }
-                    });
-                    if (isBomb()) {
-                    open(() -> {});
-                    if (selected != null && !selected.isBomb()) selected.close();
-                    Manager.incrementBomb();
-                    if (nbPlayers == 1) {
-                        clickCount = 2;
-                        Manager.setNextPlayer();
                     } else {
-                        clickCount = 0;
+                        Manager.incrementScore();
+                        if (Manager.isGameOver()) {
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setTitle("Fin de la partie");
+                            alert.setHeaderText("Nous avons un vainqueur !");
+                            alert.setContentText("Bravo " + Manager.getBestPlayer().getName() + " !");
+
+                            alert.show();
+                        }
+                        clickCount = 2;
+                        System.out.println("in has same value " + clickCount);
                     }
                     selected = null;
-                    }
+                });
+            }
+            if (isBomb()) {
+                open(() -> {
+                });
+                if (selected != null && !selected.isBomb()) selected.close();
+                Manager.incrementBomb();
+                if (nbPlayers == 1) {
+                    clickCount = 2;
+                    Manager.setNextPlayer();
+                } else {
+                    clickCount = 0;
                 }
+                selected = null;
+            }
+            PauseTransition wait = new PauseTransition(Duration.seconds(0.5));
+            wait.setOnFinished((e) -> {
                 if (clickCount == 0) {
                     nextPlayer.setDisable(false);
                 }
-            }
+                wait.playFromStart();
+            });
+            wait.play();
         }
 
         public String getUrl() {
@@ -445,6 +438,7 @@ public class Main extends Application {
         public boolean hasSameValue(Tile other) {
             return this.id == other.id;
         }
+
     }
 
     public static void swapTile(Tile t1, Tile t2) {
