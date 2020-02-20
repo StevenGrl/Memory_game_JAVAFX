@@ -343,34 +343,7 @@ public class Main extends Application {
         }
 
         public void handleMouseClick(MouseEvent event) {
-<<<<<<< Updated upstream
             if (isOpen() || clickCount == 0 || Manager.isGameOver()) {
-                return;
-            }
-            clickCount--;
-            if (selected == null && !isBomb()) {
-                selected = this;
-                open(() -> {});
-            } else if (!isBomb()){
-                open(() -> {
-                    if (!hasSameValue(selected)) {
-                        selected.close();
-                        this.close();
-                        if (nbPlayers == 1) {
-                            clickCount = 2;
-                            Manager.setNextPlayer();
-                        }
-                    } else {
-                        Manager.incrementScore();
-                        if (Manager.isGameOver()) {
-                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                            alert.setTitle("Fin de la partie");
-                            alert.setHeaderText("Nous avons un vainqueur !");
-                            alert.setContentText("Bravo " + Manager.getBestPlayer().getName() + " !");
-
-                            alert.show();
-=======
-            if (isOpen() || clickCount == 0) {
                 return;
             }
             if (isSwapActivated) {
@@ -391,19 +364,19 @@ public class Main extends Application {
                 clickCount--;
                 if (selected == null && !isBomb()) {
                     selected = this;
-                    open(() -> {
-                    });
-                } else if (!isBomb()) {
+                    open(() -> {});
+                } else if (!isBomb()){
                     open(() -> {
                         if (!hasSameValue(selected)) {
                             selected.close();
                             this.close();
-                            Manager.setNextPlayer();
+                            if (nbPlayers == 1) {
+                                clickCount = 2;
+                                Manager.setNextPlayer();
+                            }
                         } else {
                             Manager.incrementScore();
-                            System.out.println("game over : " + Manager.isGameOver());
                             if (Manager.isGameOver()) {
-                                System.out.println("And the best player iiiiiiiiiiiiiiiiiis : " + Manager.getBestPlayer().getName());
                                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                                 alert.setTitle("Fin de la partie");
                                 alert.setHeaderText("Nous avons un vainqueur !");
@@ -411,45 +384,26 @@ public class Main extends Application {
 
                                 alert.show();
                             }
->>>>>>> Stashed changes
+                            selected = null;
+                            clickCount = 2;
                         }
-                        selected = null;
-                        clickCount = 2;
                     });
-                }
-                if (isBomb()) {
-                    open(() -> {
-                    });
+                    if (isBomb()) {
+                    open(() -> {});
                     if (selected != null && !selected.isBomb()) selected.close();
                     Manager.incrementBomb();
-                    Manager.setNextPlayer();
-                    selected = null;
-<<<<<<< Updated upstream
-                    if (nbPlayers != 1) {
-                        clickCount = 0;
-                    } else {
+                    if (nbPlayers == 1) {
                         clickCount = 2;
+                        Manager.setNextPlayer();
+                    } else {
+                        clickCount = 0;
                     }
-                });
-            }
-            if (isBomb()) {
-                open(() -> {});
-                if (selected != null && !selected.isBomb()) selected.close();
-                Manager.incrementBomb();
-                if (nbPlayers == 1) {
-                    clickCount = 2;
-                    Manager.setNextPlayer();
-                } else {
-                    clickCount = 0;
+                    selected = null;
+                    }
                 }
-                selected = null;
-=======
-                    clickCount = 2;
+                if (clickCount == 0) {
+                    nextPlayer.setDisable(false);
                 }
->>>>>>> Stashed changes
-            }
-            if (clickCount == 0) {
-                nextPlayer.setDisable(false);
             }
         }
 
