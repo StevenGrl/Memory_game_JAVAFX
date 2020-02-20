@@ -240,12 +240,16 @@ public class Main extends Application {
                 imageView = new ImageView(img);
             }
             getChildren().addAll(border, imageView);
+            closeOnStart();
 
             setOnMouseClicked(this::handleMouseClick);
-            closeOnStart();
         }
 
         public void handleMouseClick(MouseEvent event) {
+            if (Manager.isGameOver()) {
+                System.out.println("And the best player iiiiiiiiiiiiiiiiiis : " + Manager.getBestPlayer().getName());
+                return;
+            }
             if (isOpen() || clickCount == 0) {
                 return;
             }
@@ -289,14 +293,14 @@ public class Main extends Application {
         }
 
         public void open(Runnable action) {
-            FadeTransition ft = new FadeTransition(Duration.seconds(0.2), imageView);
+            FadeTransition ft = new FadeTransition(Duration.seconds(0.01), imageView);
             ft.setToValue(1);
             ft.setOnFinished(e -> action.run());
             ft.play();
         }
 
         public void close() {
-            FadeTransition ft = new FadeTransition(Duration.seconds(0.2), imageView);
+            FadeTransition ft = new FadeTransition(Duration.seconds(0.3), imageView);
             ft.setToValue(0);
             ft.play();
         }
