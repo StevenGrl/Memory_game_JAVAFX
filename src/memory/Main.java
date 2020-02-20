@@ -66,7 +66,9 @@ public class Main extends Application {
         for (int i = 0; i < tiles.size(); i++) {
             Tile tile = tiles.get(i);
             tile.setOnMouseEntered((MouseEvent t) -> {
-                tile.setBackground(new Background(new BackgroundFill(Color.rgb(220, 220, 220), CornerRadii.EMPTY, Insets.EMPTY)));
+                if (clickCount != 0) {
+                    tile.setBackground(new Background(new BackgroundFill(Color.rgb(220, 220, 220), CornerRadii.EMPTY, Insets.EMPTY)));
+                }
             });
             tile.setOnMouseExited((MouseEvent t) -> {
                 if (!tile.isOpen()) {
@@ -95,9 +97,22 @@ public class Main extends Application {
         HBox footer = new HBox();
         footer.setPadding(new Insets(5));
         footer.setSpacing(30);
-        footer.setAlignment(Pos.BOTTOM_RIGHT);
+        footer.setAlignment(Pos.BOTTOM_CENTER);
+
+        HBox leftFooter = new HBox();
+        VBox centerFooter = new VBox();
+        HBox centerTopFooter = new HBox();
+        HBox centerBottomFooter = new HBox();
+        HBox rightFooter = new HBox();
+
+        leftFooter.setAlignment(Pos.BOTTOM_LEFT);
+        centerFooter.setAlignment(Pos.BOTTOM_CENTER);
+        centerTopFooter.setAlignment(Pos.TOP_CENTER);
+        centerBottomFooter.setAlignment(Pos.BOTTOM_CENTER);
+        rightFooter.setAlignment(Pos.BOTTOM_RIGHT);
+
         Button replayButton = new Button("Recommencer");
-        Button menuButton = new Button("Menu");
+        Button menuButton = new Button("Accueil");
         if (nbPlayers > 1) {
             nextPlayer.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
@@ -113,14 +128,17 @@ public class Main extends Application {
                 }
             });
             nextPlayer.setDisable(true);
-            footer.getChildren().addAll(swapButton, nextPlayer, replayButton, menuButton, quitButton);
+            footer.getChildren().addAll(swapButton, nextPlayer, replayButton, menuButton);
         } else {
-            footer.getChildren().addAll(swapButton, replayButton, menuButton, quitButton);
+            footer.getChildren().addAll(swapButton, replayButton, menuButton);
         }
 
         menuButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+                selected = null;
+                clickCount = 2;
+                isSwapActivated = false;
                 nbPlayers = 1;
                 primaryStage.setScene(new Scene(createUserFields(primaryStage)));
             }
@@ -131,6 +149,9 @@ public class Main extends Application {
             public void handle(ActionEvent actionEvent) {
                 Manager.resetScore();
                 Manager.refreshAllLabel();
+                selected = null;
+                clickCount = 2;
+                isSwapActivated = false;
                 primaryStage.setScene(new Scene(createContent(primaryStage, manager)));
             }
         });
@@ -150,13 +171,6 @@ public class Main extends Application {
         });
 
         root.getChildren().addAll(boxPlayers, grid, footer);
-
-        quitButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                System.exit(0);
-            }
-        });
 
         return root;
     }
@@ -357,13 +371,6 @@ public class Main extends Application {
         mainBox.setAlignment(Pos.CENTER);
 
         root.getChildren().add(mainBox);
-
-        quitButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                System.exit(0);
-            }
-        });
 
         return root;
     }
