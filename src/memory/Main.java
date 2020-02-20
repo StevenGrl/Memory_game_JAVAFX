@@ -9,10 +9,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -94,6 +91,7 @@ public class Main extends Application {
         menuButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+                nbPlayers = 1;
                 primaryStage.setScene(new Scene(createUserFields(primaryStage)));
             }
         });
@@ -283,6 +281,12 @@ public class Main extends Application {
                         System.out.println("game over : " + Manager.isGameOver());
                         if (Manager.isGameOver()) {
                             System.out.println("And the best player iiiiiiiiiiiiiiiiiis : " + Manager.getBestPlayer().getName());
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setTitle("Fin de la partie");
+                            alert.setHeaderText("Nous avons un vainqueur !");
+                            alert.setContentText("Bravo " + Manager.getBestPlayer().getName() + " !");
+
+                            alert.show();
                         }
                     }
                     selected = null;
@@ -339,6 +343,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setScene(new Scene(createUserFields(primaryStage)));
+        primaryStage.setTitle("Memory");
         primaryStage.show();
     }
 
