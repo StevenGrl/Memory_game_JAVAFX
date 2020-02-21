@@ -43,7 +43,7 @@ public class Main extends Application {
     private static boolean isSwapActivated = false;
     private static Tile[] tilesToSwap = new Tile[2];
 
-    //Page de création de la partie
+    //Page de création de la partie ===============================================================================//
     private Parent createUserFields(Stage primaryStage) {
         List<TextField> labels = new ArrayList<>();
         StackPane root = new StackPane();
@@ -263,7 +263,7 @@ public class Main extends Application {
         return root;
     }
 
-    //page du jeu
+    //page du jeu ================================================================================================//
     private Parent createContent(Stage primaryStage, Manager manager) {
         VBox root = new VBox();
         root.setPrefSize(800, 800);
@@ -310,6 +310,9 @@ public class Main extends Application {
         HBox boxPlayers = new HBox();
         boxPlayers.setAlignment(Pos.TOP_CENTER);
         boxPlayers.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(2))));
+        boxPlayers.setSpacing(5);
+        boxPlayers.setMaxWidth(600);
+        boxPlayers.setPadding(new Insets(15));
         for (int i = 0; i < manager.getNbPlayers(); i++) {
             boxPlayers.getChildren().add(Manager.getPlayers().get(i).getBox());
         }
@@ -376,7 +379,8 @@ public class Main extends Application {
                 }
             }
         });
-
+        root.setAlignment(Pos.TOP_CENTER);
+        root.setPadding(new Insets(15));
         root.getChildren().addAll(boxPlayers, grid, footer);
 
         //bouton quitter
@@ -390,7 +394,7 @@ public class Main extends Application {
         return root;
     }
 
-    //Class Tile
+    //Class Tile =============================================================================================//
     private static class Tile extends StackPane {
         private int id;
         private ImageView imageView;
