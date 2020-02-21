@@ -323,9 +323,39 @@ public class Main extends Application {
         HBox footer = new HBox();
         footer.setPadding(new Insets(5));
         footer.setSpacing(30);
-        footer.setAlignment(Pos.BOTTOM_RIGHT);
+        footer.setAlignment(Pos.CENTER);
+        footer.setPrefHeight(500);
+
         Button replayButton = new Button("Recommencer");
-        Button menuButton = new Button("Menu");
+        Button menuButton = new Button("Accueil");
+
+        HBox leftFooter = new HBox();
+        VBox centerFooter = new VBox();
+        HBox centerTopFooter = new HBox();
+        HBox centerBottomFooter = new HBox();
+        HBox rightFooter = new HBox();
+
+        leftFooter.setAlignment(Pos.BOTTOM_LEFT);
+        centerFooter.setAlignment(Pos.BOTTOM_CENTER);
+        centerTopFooter.setAlignment(Pos.TOP_CENTER);
+        centerBottomFooter.setAlignment(Pos.BOTTOM_CENTER);
+        rightFooter.setAlignment(Pos.BOTTOM_RIGHT);
+
+        Region vSpacer = new Region();
+        Region hSpacer = new Region();
+        Region hSpacer2 = new Region();
+        VBox.setVgrow(vSpacer, Priority.ALWAYS);
+        HBox.setHgrow(hSpacer, Priority.ALWAYS);
+        HBox.setHgrow(hSpacer2, Priority.ALWAYS);
+
+        leftFooter.getChildren().add(menuButton);
+        centerTopFooter.setSpacing(10);
+        centerTopFooter.getChildren().addAll(swapButton, nextPlayer);
+        centerBottomFooter.getChildren().add(replayButton);
+
+        centerFooter.setSpacing(10);
+        rightFooter.getChildren().add(quitButton);
+
         if (nbPlayers > 1) {
             nextPlayer.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
@@ -341,10 +371,14 @@ public class Main extends Application {
                 }
             });
             nextPlayer.setDisable(true);
-            footer.getChildren().addAll(swapButton, nextPlayer, replayButton, menuButton, quitButton);
+            //footer.getChildren().addAll(swapButton, nextPlayer, replayButton, menuButton, quitButton);
+            centerFooter.getChildren().addAll(centerTopFooter, vSpacer, centerBottomFooter);
         } else {
-            footer.getChildren().addAll(swapButton, replayButton, menuButton, quitButton);
+            //footer.getChildren().addAll(swapButton, replayButton, menuButton, quitButton);
+            centerFooter.getChildren().addAll(vSpacer, centerBottomFooter);
         }
+
+        footer.getChildren().addAll(leftFooter, hSpacer, centerFooter, hSpacer2, rightFooter);
 
         //action bouton menu
         menuButton.setOnAction(new EventHandler<ActionEvent>() {
