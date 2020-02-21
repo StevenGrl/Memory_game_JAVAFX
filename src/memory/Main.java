@@ -85,6 +85,9 @@ public class Main extends Application {
         grid.setHgap(5);
         grid.setAlignment(Pos.TOP_CENTER);
 
+        Button replayButton = new Button("Recommencer");
+        Button menuButton = new Button("Accueil");
+
         HBox boxPlayers = new HBox();
         boxPlayers.setAlignment(Pos.TOP_CENTER);
         boxPlayers.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(2))));
@@ -97,7 +100,8 @@ public class Main extends Application {
         HBox footer = new HBox();
         footer.setPadding(new Insets(5));
         footer.setSpacing(30);
-        footer.setAlignment(Pos.BOTTOM_CENTER);
+        footer.setAlignment(Pos.CENTER);
+        footer.setPrefHeight(500);
 
         HBox leftFooter = new HBox();
         VBox centerFooter = new VBox();
@@ -111,8 +115,21 @@ public class Main extends Application {
         centerBottomFooter.setAlignment(Pos.BOTTOM_CENTER);
         rightFooter.setAlignment(Pos.BOTTOM_RIGHT);
 
-        Button replayButton = new Button("Recommencer");
-        Button menuButton = new Button("Accueil");
+        Region vSpacer = new Region();
+        Region hSpacer = new Region();
+        Region hSpacer2 = new Region();
+        VBox.setVgrow(vSpacer, Priority.ALWAYS);
+        HBox.setHgrow(hSpacer, Priority.ALWAYS);
+        HBox.setHgrow(hSpacer2, Priority.ALWAYS);
+
+        leftFooter.getChildren().add(menuButton);
+        centerTopFooter.setSpacing(10);
+        centerBottomFooter.getChildren().add(replayButton);
+        centerFooter.getChildren().addAll(centerTopFooter, vSpacer, centerBottomFooter);
+        centerFooter.setSpacing(10);
+        rightFooter.getChildren().add(quitButton);
+
+
         if (nbPlayers > 1) {
             nextPlayer.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
@@ -128,10 +145,11 @@ public class Main extends Application {
                 }
             });
             nextPlayer.setDisable(true);
-            footer.getChildren().addAll(swapButton, nextPlayer, replayButton, menuButton);
-        } else {
-            footer.getChildren().addAll(swapButton, replayButton, menuButton);
+
+            centerTopFooter.getChildren().addAll(swapButton, nextPlayer);
         }
+
+        footer.getChildren().addAll(leftFooter, hSpacer, centerFooter, hSpacer2, rightFooter);
 
         menuButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -172,6 +190,13 @@ public class Main extends Application {
 
         root.getChildren().addAll(boxPlayers, grid, footer);
 
+        quitButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.exit(0);
+            }
+        });
+
         return root;
     }
 
@@ -180,6 +205,14 @@ public class Main extends Application {
         StackPane root = new StackPane();
         root.setPrefSize(800, 800);
 
+        //Joueurs
+        Label playerLabel = new Label("Choix des joueurs : ");
+        VBox playerBox = new VBox();
+        playerBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(2))));
+        playerBox.setSpacing(5);
+        playerBox.setAlignment(Pos.CENTER);
+        playerBox.setMaxWidth(400);
+        playerBox.setPadding(new Insets(15));
         VBox fieldsBox = new VBox();
         fieldsBox.setPadding(new Insets(20, 50, 20, 50));
         Label label = new Label("Joueur 1 :");
@@ -189,9 +222,8 @@ public class Main extends Application {
         fieldsBox.getChildren().addAll(label, textField);
         fieldsBox.setSpacing(10);
         fieldsBox.setAlignment(Pos.CENTER);
-        fieldsBox.setMaxWidth(400);
-        fieldsBox.setMinHeight(100);
-        fieldsBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(2))));
+
+
 
         VBox errorBox = new VBox();
         errorBox.setAlignment(Pos.CENTER);
@@ -220,7 +252,6 @@ public class Main extends Application {
             }
         });
 
-        fieldsBox.getChildren().addAll(buttonBox);
 
         Button removePlayerBtn = new Button("-");
         removePlayerBtn.setOnAction(new EventHandler<ActionEvent>() {
@@ -243,10 +274,14 @@ public class Main extends Application {
         buttonBox.getChildren().addAll(addPlayerBtn, removePlayerBtn);
         buttonBox.setSpacing(10);
 
+        playerBox.getChildren().addAll(fieldsBox, buttonBox);
+
+
         //Box niveau partie
         Label gameLabel = new Label("Niveau de difficulté : ");
         VBox gameBox = new VBox();
         gameBox.setMaxWidth(400);
+        playerBox.setPadding(new Insets(15));
         gameBox.setMinHeight(100);
         gameBox.setAlignment(Pos.CENTER);
         gameBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(2))));
@@ -367,10 +402,17 @@ public class Main extends Application {
 
         VBox mainBox = new VBox();
         mainBox.setSpacing(20);
-        mainBox.getChildren().addAll(fieldsBox, buttonBox, gameLabel, gameBox, paramsLabel, paramsBox, errorBox, submitBox, quitButton);
+        mainBox.getChildren().addAll(playerLabel, playerBox , gameLabel, gameBox, paramsLabel, paramsBox, errorBox, submitBox, quitButton);
         mainBox.setAlignment(Pos.CENTER);
 
         root.getChildren().add(mainBox);
+
+        quitButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.exit(0);
+            }
+        });
 
         return root;
     }
