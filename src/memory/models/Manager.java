@@ -54,6 +54,7 @@ public class Manager {
         return currentPlayer;
     }
 
+    //Changement de joueurs
     public static void setNextPlayer() {
         currentPlayer.setBackground(bgNotCurrent);
         int nextPlayerIndex;
@@ -65,6 +66,7 @@ public class Manager {
         currentPlayer.setBackground(bgCurrent);
     }
 
+    //gestion bombe
     public static void incrementBomb() {
         currentPlayer.setNbBombe(currentPlayer.getNbBombe() + 1);
         if (currentPlayer.getNbBombe() % 3 == 0) {
@@ -73,6 +75,7 @@ public class Manager {
         refreshLabel();
     }
 
+    //gestion score
     public static void incrementScore() {
         currentPlayer.setScore(currentPlayer.getScore() + 1);
         nbFinded++;
@@ -84,6 +87,15 @@ public class Manager {
         refreshLabel();
     }
 
+    public static void resetScore() {
+        for (int i = 0; i < getPlayers().size(); i++) {
+            getPlayers().get(i).setScore(0);
+            getPlayers().get(i).setNbBombe(0);
+            System.out.println(getPlayers().get(i).getScore());
+        }
+    }
+
+    //gestion label
     public static void refreshLabel() {
         Label lab = (Label) Manager.currentPlayer.getBox().getChildren().get(0);
         lab.setText(Manager.currentPlayer.getLabel());
@@ -107,6 +119,7 @@ public class Manager {
         }
     }
 
+    //gestion fin jeu
     public static boolean isGameOver() {
         return nbFinded == nbPairs;
     }
@@ -137,13 +150,5 @@ public class Manager {
             }
         }
         return worstPlayer;
-    }
-
-    public static void resetScore() {
-        for (int i = 0; i < getPlayers().size(); i++) {
-            getPlayers().get(i).setScore(0);
-            getPlayers().get(i).setNbBombe(0);
-            System.out.println(getPlayers().get(i).getScore());
-        }
     }
 }

@@ -2,7 +2,6 @@ package memory.models;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -12,7 +11,6 @@ public class Player {
     private Integer score;
     private Integer nbBombe;
     private VBox box;
-    private ImageView imageView;
 
     public Player(String name, Integer score, Integer nbBombe, VBox playerBox) {
         this.name = name;
@@ -70,6 +68,7 @@ public class Player {
         return box;
     }
 
+    //box contenant les infos joueurs
     public void setBox(VBox box) {
         Label label = (Label) box.getChildren().get(0);
         label.setText(this.getLabel());

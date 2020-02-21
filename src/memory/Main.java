@@ -43,130 +43,13 @@ public class Main extends Application {
     private static boolean isSwapActivated = false;
     private static Tile[] tilesToSwap = new Tile[2];
 
-    private Parent createContent(Stage primaryStage, Manager manager) {
-        VBox root = new VBox();
-        root.setPrefSize(800, 800);
-        int nb = 1;
-        List<Tile> tiles = new ArrayList<>();
-        for (int i = 0; i < NUMBER_OF_PAIRS; i++) {
-            tiles.add(new Tile(String.valueOf(nb)));
-            tiles.add(new Tile(String.valueOf(nb)));
-            nb++;
-        }
-
-        if (Manager.isIsGameWithBombs()) {
-            for (int i = 0; i < NUMBER_PER_ROW; i++) {
-                tiles.add(new Tile("Bomb"));
-            }
-        }
-
-        Collections.shuffle(tiles);
-
-        GridPane grid = new GridPane();
-        for (int i = 0; i < tiles.size(); i++) {
-            Tile tile = tiles.get(i);
-            tile.setOnMouseEntered((MouseEvent t) -> {
-                tile.setBackground(new Background(new BackgroundFill(Color.rgb(220, 220, 220), CornerRadii.EMPTY, Insets.EMPTY)));
-            });
-            tile.setOnMouseExited((MouseEvent t) -> {
-                if (!tile.isOpen()) {
-                    tile.setBackground(new Background(new BackgroundFill(bgTile, CornerRadii.EMPTY, Insets.EMPTY)));
-                } else {
-                    tile.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-                }
-            });
-            grid.add(tile, (i % NUMBER_PER_ROW), (i / NUMBER_PER_ROW));
-        }
-
-        grid.setPadding(new Insets(15));
-        grid.setVgap(5);
-        grid.setHgap(5);
-        grid.setAlignment(Pos.TOP_CENTER);
-
-        HBox boxPlayers = new HBox();
-        boxPlayers.setAlignment(Pos.TOP_CENTER);
-        boxPlayers.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(2))));
-        for (int i = 0; i < manager.getNbPlayers(); i++) {
-            boxPlayers.getChildren().add(Manager.getPlayers().get(i).getBox());
-        }
-        boxPlayers.setPadding(new Insets(15));
-        boxPlayers.setSpacing(5);
-
-        HBox footer = new HBox();
-        footer.setPadding(new Insets(5));
-        footer.setSpacing(30);
-        footer.setAlignment(Pos.BOTTOM_RIGHT);
-        Button replayButton = new Button("Recommencer");
-        Button menuButton = new Button("Menu");
-        if (nbPlayers > 1) {
-            nextPlayer.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    clickCount = 2;
-                    nextPlayer.setDisable(true);
-                    Manager.setNextPlayer();
-                    if (Manager.getCurrentPlayer() == Manager.getWorstPlayer() && Manager.getBestPlayer().getScore() != 0) {
-                        swapButton.setDisable(false);
-                    } else {
-                        swapButton.setDisable(true);
-                    }
-                }
-            });
-            nextPlayer.setDisable(true);
-            footer.getChildren().addAll(swapButton, nextPlayer, replayButton, menuButton, quitButton);
-        } else {
-            footer.getChildren().addAll(swapButton, replayButton, menuButton, quitButton);
-        }
-
-        menuButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                nbPlayers = 1;
-                primaryStage.setScene(new Scene(createUserFields(primaryStage)));
-            }
-        });
-
-        replayButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                Manager.resetScore();
-                Manager.refreshAllLabel();
-                primaryStage.setScene(new Scene(createContent(primaryStage, manager)));
-            }
-        });
-
-        if (Manager.getCurrentPlayer() == Manager.getWorstPlayer() && Manager.getBestPlayer().getScore() != 0) {
-            swapButton.setDisable(false);
-        } else {
-            swapButton.setDisable(true);
-        }
-        swapButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                if (clickCount == 2) {
-                    isSwapActivated = true;
-                }
-            }
-        });
-
-        root.getChildren().addAll(boxPlayers, grid, footer);
-
-        quitButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                System.exit(0);
-            }
-        });
-
-        return root;
-    }
-
+    //Page de création de la partie
     private Parent createUserFields(Stage primaryStage) {
         List<TextField> labels = new ArrayList<>();
         StackPane root = new StackPane();
         root.setPrefSize(800, 800);
 
-        //Joueurs
+        //Création joueurs
         Label playerLabel = new Label("Choix des joueurs : ");
         VBox playerBox = new VBox();
         playerBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(2))));
@@ -183,8 +66,6 @@ public class Main extends Application {
         fieldsBox.getChildren().addAll(label, textField);
         fieldsBox.setSpacing(10);
         fieldsBox.setAlignment(Pos.CENTER);
-
-
 
         VBox errorBox = new VBox();
         errorBox.setAlignment(Pos.CENTER);
@@ -204,6 +85,7 @@ public class Main extends Application {
                     fieldsBox.getChildren().addAll(labelPlayers, textField);
                     nbPlayers++;
                 } else if (!isNbMaxPlayersReached) {
+                    //gestion des erreurs du formulaire
                     Label nbJoueursMaxReached = new Label("Nombre de joueurs maximum atteint");
                     nbJoueursMaxReached.setFont(Font.font(25));
                     nbJoueursMaxReached.setTextFill(Color.RED);
@@ -218,6 +100,7 @@ public class Main extends Application {
         removePlayerBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                //gestion des erreurs du formulaire
                 if (nbPlayers == 1) {
                     Label nbMinJoueurs = new Label("Il doit rester au moins 1 joueur");
                     nbMinJoueurs.setFont(Font.font(25));
@@ -302,11 +185,13 @@ public class Main extends Application {
 
         paramsBox.getChildren().addAll(colorBox, colorTileBox, themeBox);
 
+        //gestion bouton
         HBox submitBox = new HBox();
         Button submit = new Button("Lancer la partie");
         submit.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+                //gestion des erreurs du formulaire
                 errorBox.getChildren().removeAll(errorBox.getChildren());
                 List<Player> players = new ArrayList<>();
                 for (int i = 0; i < nbPlayers; i++) {
@@ -368,6 +253,133 @@ public class Main extends Application {
 
         root.getChildren().add(mainBox);
 
+        //bouton exit
+        quitButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.exit(0);
+            }
+        });
+        return root;
+    }
+
+    //page du jeu
+    private Parent createContent(Stage primaryStage, Manager manager) {
+        VBox root = new VBox();
+        root.setPrefSize(800, 800);
+        int nb = 1;
+        //Création du tableau avec les cartes
+        List<Tile> tiles = new ArrayList<>();
+        for (int i = 0; i < NUMBER_OF_PAIRS; i++) {
+            tiles.add(new Tile(String.valueOf(nb)));
+            tiles.add(new Tile(String.valueOf(nb)));
+            nb++;
+        }
+        //Ajout des bombes si besoin
+        if (Manager.isIsGameWithBombs()) {
+            for (int i = 0; i < NUMBER_PER_ROW; i++) {
+                tiles.add(new Tile("Bomb"));
+            }
+        }
+
+        Collections.shuffle(tiles);
+
+        //Création de l'effet grille et gestion des effets souris
+        GridPane grid = new GridPane();
+        for (int i = 0; i < tiles.size(); i++) {
+            Tile tile = tiles.get(i);
+            tile.setOnMouseEntered((MouseEvent t) -> {
+                tile.setBackground(new Background(new BackgroundFill(Color.rgb(220, 220, 220), CornerRadii.EMPTY, Insets.EMPTY)));
+            });
+            tile.setOnMouseExited((MouseEvent t) -> {
+                if (!tile.isOpen()) {
+                    tile.setBackground(new Background(new BackgroundFill(bgTile, CornerRadii.EMPTY, Insets.EMPTY)));
+                } else {
+                    tile.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+                }
+            });
+            grid.add(tile, (i % NUMBER_PER_ROW), (i / NUMBER_PER_ROW));
+        }
+
+        grid.setPadding(new Insets(15));
+        grid.setVgap(5);
+        grid.setHgap(5);
+        grid.setAlignment(Pos.TOP_CENTER);
+
+        //gestion affichage joueur
+        HBox boxPlayers = new HBox();
+        boxPlayers.setAlignment(Pos.TOP_CENTER);
+        boxPlayers.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(2))));
+        for (int i = 0; i < manager.getNbPlayers(); i++) {
+            boxPlayers.getChildren().add(Manager.getPlayers().get(i).getBox());
+        }
+        boxPlayers.setPadding(new Insets(15));
+        boxPlayers.setSpacing(5);
+
+        //Gestion bouton
+        HBox footer = new HBox();
+        footer.setPadding(new Insets(5));
+        footer.setSpacing(30);
+        footer.setAlignment(Pos.BOTTOM_RIGHT);
+        Button replayButton = new Button("Recommencer");
+        Button menuButton = new Button("Menu");
+        if (nbPlayers > 1) {
+            nextPlayer.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    clickCount = 2;
+                    nextPlayer.setDisable(true);
+                    Manager.setNextPlayer();
+                    if (Manager.getCurrentPlayer() == Manager.getWorstPlayer() && Manager.getBestPlayer().getScore() != 0) {
+                        swapButton.setDisable(false);
+                    } else {
+                        swapButton.setDisable(true);
+                    }
+                }
+            });
+            nextPlayer.setDisable(true);
+            footer.getChildren().addAll(swapButton, nextPlayer, replayButton, menuButton, quitButton);
+        } else {
+            footer.getChildren().addAll(swapButton, replayButton, menuButton, quitButton);
+        }
+
+        //action bouton menu
+        menuButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                nbPlayers = 1;
+                primaryStage.setScene(new Scene(createUserFields(primaryStage)));
+            }
+        });
+
+        //action bouton recommencer
+        replayButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                Manager.resetScore();
+                Manager.refreshAllLabel();
+                primaryStage.setScene(new Scene(createContent(primaryStage, manager)));
+            }
+        });
+
+        //gestion bouton echange
+        if (Manager.getCurrentPlayer() == Manager.getWorstPlayer() && Manager.getBestPlayer().getScore() != 0) {
+            swapButton.setDisable(false);
+        } else {
+            swapButton.setDisable(true);
+        }
+        swapButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                if (clickCount == 2) {
+                    isSwapActivated = true;
+                }
+            }
+        });
+
+        root.getChildren().addAll(boxPlayers, grid, footer);
+
+        //bouton quitter
         quitButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -378,6 +390,7 @@ public class Main extends Application {
         return root;
     }
 
+    //Class Tile
     private static class Tile extends StackPane {
         private int id;
         private ImageView imageView;
@@ -403,6 +416,7 @@ public class Main extends Application {
             setOnMouseClicked(this::handleMouseClick);
         }
 
+        //action sur les cartes
         public void handleMouseClick(MouseEvent event) {
             if (isOpen() || clickCount == 0 || Manager.isGameOver()) {
                 return;
@@ -480,6 +494,7 @@ public class Main extends Application {
             return imageView.getOpacity() == 1;
         }
 
+        //"ouverture" d'une carte
         public void open(Runnable action) {
             this.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
             FadeTransition ft = new FadeTransition(Duration.seconds(0.01), imageView);
@@ -488,6 +503,7 @@ public class Main extends Application {
             ft.play();
         }
 
+        // cache une carte
         public void close() {
             FadeTransition ft = new FadeTransition(Duration.seconds(0.3), imageView);
             ft.setToValue(0);
@@ -495,17 +511,20 @@ public class Main extends Application {
             this.setBackground(new Background(new BackgroundFill(bgTile, CornerRadii.EMPTY, Insets.EMPTY)));
         }
 
+        // cache les cartes au lancement du jeu
         public void closeOnStart() {
             FadeTransition ft = new FadeTransition(Duration.seconds(0.01), imageView);
             ft.setToValue(0);
             ft.play();
         }
 
+
         public boolean hasSameValue(Tile other) {
             return this.id == other.id;
         }
     }
 
+    //gère l'action "clique" sur une carte pour l'échanger
     public static void getSwapTile(MouseEvent event) {
         if (clickCount == 2) {
             tilesToSwap[0] = (Tile) event.getSource();
@@ -532,6 +551,7 @@ public class Main extends Application {
         }
     }
 
+    //échange 2 cartes
     public static void swapTile(Tile t1, Tile t2) {
         Integer temp = GridPane.getRowIndex(t1);
         GridPane.setRowIndex(t1, GridPane.getRowIndex(t2));
@@ -542,6 +562,7 @@ public class Main extends Application {
         GridPane.setColumnIndex(t2, temp);
     }
 
+    //formule du nombre de carte par ligne et du nombre de bombes
     public void setNumberPerRow() {
         NUMBER_PER_ROW = (int) Math.sqrt(NUMBER_OF_PAIRS * 2);
     }
