@@ -209,6 +209,9 @@ public class Main extends Application {
                 }
 
                 //Gestion parametre de partie
+                clickCount = 2;
+                selected = null;
+                isSwapActivated = false;
                 NUMBER_OF_PAIRS = Integer.valueOf(nbCardsChoice.getSelectionModel().selectedItemProperty().getValue().toString());
                 boolean isGameWithBombs = false;
                 if (gameModeChoice.getSelectionModel().getSelectedIndex() == 1) {
@@ -265,7 +268,7 @@ public class Main extends Application {
 
     //page du jeu ================================================================================================//
     private Parent createContent(Stage primaryStage, Manager manager) {
-        System.out.println("game over : " + Manager.isGameOver());
+        System.out.println("nb click : " + clickCount);
         VBox root = new VBox();
         root.setPrefSize(800, 800);
         int nb = 1;
@@ -372,10 +375,8 @@ public class Main extends Application {
                 }
             });
             nextPlayer.setDisable(true);
-            //footer.getChildren().addAll(swapButton, nextPlayer, replayButton, menuButton, quitButton);
             centerFooter.getChildren().addAll(centerTopFooter, vSpacer, centerBottomFooter);
         } else {
-            //footer.getChildren().addAll(swapButton, replayButton, menuButton, quitButton);
             centerFooter.getChildren().addAll(vSpacer, centerBottomFooter);
         }
 
@@ -395,6 +396,9 @@ public class Main extends Application {
         replayButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+                clickCount = 2;
+                selected = null;
+                isSwapActivated = false;
                 Manager.resetScore();
                 Manager.refreshAllLabel();
                 primaryStage.setScene(new Scene(createContent(primaryStage, manager)));
