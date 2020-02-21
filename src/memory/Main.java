@@ -265,6 +265,7 @@ public class Main extends Application {
 
     //page du jeu ================================================================================================//
     private Parent createContent(Stage primaryStage, Manager manager) {
+        System.out.println("game over : " + Manager.isGameOver());
         VBox root = new VBox();
         root.setPrefSize(800, 800);
         int nb = 1;
@@ -385,6 +386,7 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent actionEvent) {
                 nbPlayers = 1;
+                Manager.resetScore();
                 primaryStage.setScene(new Scene(createUserFields(primaryStage)));
             }
         });
@@ -532,7 +534,7 @@ public class Main extends Application {
             return imageView.getOpacity() == 1;
         }
 
-        //"ouverture" d'une carte
+        // découvre une carte
         public void open(Runnable action) {
             this.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
             FadeTransition ft = new FadeTransition(Duration.seconds(0.01), imageView);

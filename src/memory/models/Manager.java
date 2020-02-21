@@ -91,8 +91,8 @@ public class Manager {
         for (int i = 0; i < getPlayers().size(); i++) {
             getPlayers().get(i).setScore(0);
             getPlayers().get(i).setNbBombe(0);
-            System.out.println(getPlayers().get(i).getScore());
         }
+        nbFinded = 0;
     }
 
     //gestion label
